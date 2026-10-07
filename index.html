@@ -7,114 +7,205 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700&family=Rozha+One&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#172033;--indigo:#1B2A5C;--teal:#0F7C7A;--gold:#F2A900;--mist:#EEF4F6;--line:#C9D6DB;--white:#fff}
+:root{--ink:#172033;--indigo:#1B2A5C;--teal:#0F7C7A;--gold:#F2A900;--mist:#EEF4F6;--line:#C9D6DB;--white:#fff;--red:#B3261E}
 *{box-sizing:border-box}
 body{margin:0;font-family:'Mukta',system-ui,sans-serif;color:var(--ink);background:var(--mist);line-height:1.55;font-size:17px}
-header{background:var(--indigo);color:var(--white);padding:40px 20px 56px;text-align:center;border-bottom:6px solid var(--gold)}
-header h1{font-family:'Rozha One',Georgia,serif;font-weight:400;font-size:clamp(28px,6vw,44px);margin:0 0 8px}
+header{background:var(--indigo);color:var(--white);padding:36px 20px 52px;text-align:center;border-bottom:6px solid var(--gold);position:relative}
+header h1{font-family:'Rozha One',Georgia,serif;font-weight:400;font-size:clamp(28px,6vw,44px);margin:0 0 6px}
 header p{margin:0 auto;max-width:34em;color:#D5DDF2}
-main{max-width:760px;margin:-28px auto 60px;padding:0 16px}
+#logout{position:absolute;top:12px;right:12px;width:auto;padding:6px 14px;font-size:15px;background:transparent;color:var(--white);border:1.5px solid #8F9CC8}
+main{max-width:820px;margin:-26px auto 60px;padding:0 16px}
 .panel{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:18px}
 h2{font-size:20px;margin:0 0 12px;color:var(--indigo)}
+h3{font-size:17px;margin:20px 0 8px;color:var(--indigo)}
 label.f{display:block;font-weight:600;margin-bottom:14px}
-input[type=text],input[type=tel],textarea{display:block;width:100%;margin-top:4px;padding:11px 12px;font:inherit;border:1.5px solid var(--line);border-radius:8px;background:var(--white)}
-textarea{min-height:80px}
+input[type=text],input[type=tel],input[type=password]{display:block;width:100%;margin-top:4px;padding:11px 12px;font:inherit;border:1.5px solid var(--line);border-radius:8px;background:var(--white)}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .sevas{display:grid;gap:10px}
 .seva{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer}
 .seva input{width:22px;height:22px;margin-top:3px;accent-color:var(--teal);flex:none}
 .seva b{display:block}
 .seva span{font-size:15px;color:#4A566B}
-.seva:has(input:checked){border-color:var(--teal);background:#E6F4F3}
-.count{font-weight:600;color:var(--teal);margin:12px 0 0}
+.seva:has(input:checked),.chip:has(input:checked){border-color:var(--teal);background:#E6F4F3}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1.5px solid var(--line);border-radius:999px;cursor:pointer}
+.chip input{accent-color:var(--teal);width:18px;height:18px}
+.chip small{color:#4A566B}
+.count{font-weight:600;color:var(--teal);margin:10px 0 0}
 button{width:100%;padding:14px;font:inherit;font-weight:700;font-size:18px;color:var(--indigo);background:var(--gold);border:0;border-radius:10px;cursor:pointer}
 button:disabled{opacity:.6;cursor:wait}
-#msg{margin-top:14px;font-weight:600}
-#msg.err{color:#B3261E}#msg.ok{color:var(--teal)}
-@media (prefers-reduced-motion:no-preference){button{transition:transform .1s}button:active{transform:scale(.98)}}
+button.sm{width:auto;padding:6px 14px;font-size:15px;background:#fff;color:var(--red);border:1.5px solid var(--red)}
+.msg{margin-top:12px;font-weight:600;min-height:1.2em}
+.msg.err{color:var(--red)}.msg.ok{color:var(--teal)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row small{display:block;color:#4A566B}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--mist);color:var(--indigo)}
+.tally{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tally span{background:var(--mist);border-radius:8px;padding:4px 10px;font-size:15px}
 </style>
 </head>
 <body>
 <header>
+  <button id="logout" hidden>Log out</button>
   <h1>Shri Krishna Bhakta Sabha</h1>
-  <p>Choose the seva you would like to do. Select as many as you wish.</p>
+  <p id="sub">Log in to continue.</p>
 </header>
 <main>
-<div class="panel" id="done" hidden>
-  <h2>Thank you, <span id="who"></span>!</h2>
-  <p>Your seva choices have been received. Hare Krishna!</p>
-</div>
-<form id="form" class="panel" novalidate>
+
+<form id="vLogin" class="panel" novalidate>
+  <h2>Log in</h2>
+  <label class="f">Username<input type="text" id="lu" autocomplete="username" autocapitalize="none" required></label>
+  <label class="f">Password<input type="password" id="lp" autocomplete="current-password" required></label>
+  <button type="submit" id="lgo">Log in</button>
+  <div class="msg" id="lmsg" role="status"></div>
+</form>
+
+<form id="vVol" class="panel" hidden novalidate>
   <h2>Your details</h2>
   <label class="f">Name<input type="text" id="name" autocomplete="name" required></label>
-  <label class="f">Phone number (WhatsApp preferred)<input type="tel" id="phone" autocomplete="tel" inputmode="tel" required></label>
-
-  <h2>Available seva</h2>
+  <label class="f">WhatsApp number<input type="tel" id="wa" autocomplete="tel" inputmode="tel" required></label>
+  <h2>Choose your seva</h2>
   <div class="sevas" id="sevas"></div>
   <p class="count" id="count" aria-live="polite">No seva selected yet</p>
-
-  <label class="f" style="margin-top:18px">Anything else we should know? (optional)<textarea id="notes" placeholder="Preferred days, timings, skills..."></textarea></label>
-  <button type="submit" id="go">Submit my seva choices</button>
-  <div id="msg" role="status"></div>
+  <h2 style="margin-top:22px">When can you do seva?</h2>
+  <h3>Days</h3>
+  <div class="chips" id="days"></div>
+  <h3>Time slots</h3>
+  <div class="chips" id="slots"></div>
+  <button type="submit" id="vgo" style="margin-top:22px">Submit my seva choices</button>
+  <div class="msg" id="vmsg" role="status"></div>
 </form>
-</main>
 
+<div id="vDone" class="panel" hidden>
+  <h2>Thank you, <span id="who"></span>!</h2>
+  <p id="doneTxt"></p>
+  <button id="again">Sign up for more seva</button>
+</div>
+
+<div id="vAdmin" hidden>
+  <div class="panel">
+    <h2>Add a seva</h2>
+    <label class="f">Seva name<input type="text" id="an"></label>
+    <label class="f">Short description<input type="text" id="ad"></label>
+    <button id="ago">Add seva</button>
+    <div class="msg" id="amsg" role="status"></div>
+  </div>
+  <div class="panel">
+    <h2>All sevas</h2>
+    <p style="margin-top:0;color:#4A566B">You can also edit the "Sevas" tab in the Google Sheet. Set Active to No to hide a seva without deleting it.</p>
+    <div id="alist"></div>
+  </div>
+  <div class="panel">
+    <h2>Sign-ups</h2>
+    <div class="tally" id="tally"></div>
+    <div class="scroll"><table id="tbl"></table></div>
+  </div>
+</div>
+
+</main>
 <script>
 /* ===== EDIT THIS SECTION ===== */
-// Paste your Google Apps Script web app URL here (see Code.gs). Leave empty to test the page only.
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvsF5QTrJLpE7PA9xywcXUuL9-MG8BlOKeEDYUIXGQ680IRS8WCt0wTYwNAs3vrwt0Wg/exec";
-
-// Your seva list. Add, remove or rename freely.
-const SEVAS = [
-  {id:"gita",     name:"Gita Parayanam",             desc:"Recite or lead Bhagavad Gita chanting"},
-  {id:"bhajan",   name:"Bhajan and kirtan",          desc:"Sing or play an instrument"},
-  {id:"alankara", name:"Flowers and decoration",     desc:"Garlands, altar and hall decoration"},
-  {id:"prasadam", name:"Prasadam preparation",       desc:"Cooking and preparing offerings"},
-  {id:"serve",    name:"Prasadam distribution",      desc:"Serving devotees after satsang"},
-  {id:"clean",    name:"Cleaning and setup",         desc:"Hall cleaning, mats, arranging seating"},
-  {id:"sound",    name:"Sound and projection",       desc:"Mic, speakers, screen and recording"},
-  {id:"welcome",  name:"Welcome and registration",   desc:"Greet newcomers and keep the attendance"}
-];
+// Paste your Google Apps Script web app URL (see Code.gs)
+const API_URL = "";
+const DAYS  = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const SLOTS = [["Early morning","4–7 am"],["Morning","7–11 am"],["Afternoon","11 am–4 pm"],["Evening","4–7 pm"],["Night","after 7 pm"]];
 /* ============================= */
 
 const $ = id => document.getElementById(id);
-const box = $("sevas");
-SEVAS.forEach(s=>{
-  const l = document.createElement("label");
-  l.className = "seva";
-  l.innerHTML = '<input type="checkbox" value="'+s.name+'"><div><b>'+s.name+'</b><span>'+s.desc+'</span></div>';
-  box.appendChild(l);
+const VIEWS = ["vLogin","vVol","vDone","vAdmin"];
+let S = JSON.parse(sessionStorage.getItem("skbs") || "null");
+
+function esc(t){const d=document.createElement("div");d.textContent=t;return d.innerHTML}
+function show(id){VIEWS.forEach(v=>$(v).hidden = v!==id);$("logout").hidden = id==="vLogin";window.scrollTo(0,0)}
+function say(id,t,c){$(id).textContent=t;$(id).className="msg "+(c||"")}
+async function api(action, extra){
+  if(!API_URL) throw new Error("API_URL is not set in index.html");
+  const r = await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(Object.assign({action,user:S&&S.user,pass:S&&S.pass},extra||{}))});
+  const j = await r.json();
+  if(!j.ok) throw new Error(j.error||"Something went wrong");
+  return j;
+}
+function chips(box, items){
+  $(box).innerHTML = items.map(i=>'<label class="chip"><input type="checkbox" value="'+esc(i[0])+'">'+esc(i[0])+(i[1]?' <small>'+esc(i[1])+'</small>':'')+'</label>').join("");
+}
+const checked = sel => [...document.querySelectorAll(sel+" input:checked")].map(i=>i.value);
+chips("days", DAYS.map(d=>[d]));
+chips("slots", SLOTS);
+
+/* login */
+$("vLogin").addEventListener("submit", async e=>{
+  e.preventDefault();
+  S = {user:$("lu").value.trim(), pass:$("lp").value};
+  $("lgo").disabled = true; say("lmsg","");
+  try{
+    const r = await api("login");
+    S.role = r.role; sessionStorage.setItem("skbs",JSON.stringify(S));
+    await enter();
+  }catch(err){S=null;say("lmsg",err.message,"err")}
+  $("lgo").disabled = false;
 });
-function picked(){return [...box.querySelectorAll("input:checked")].map(i=>i.value)}
-box.addEventListener("change",()=>{
-  const n = picked().length;
-  $("count").textContent = n ? n+" seva selected" : "No seva selected yet";
+$("logout").onclick = ()=>{sessionStorage.removeItem("skbs");S=null;$("lp").value="";say("lmsg","");$("sub").textContent="Log in to continue.";show("vLogin")};
+
+async function enter(){
+  if(S.role==="admin"){ $("sub").textContent="Admin: manage sevas and see sign-ups."; await loadAdmin(); show("vAdmin"); }
+  else { $("sub").textContent="Choose the seva you would like to do. Select as many as you wish."; await loadVol(); show("vVol"); }
+}
+
+/* volunteer */
+async function loadVol(){
+  const r = await api("sevas");
+  const list = r.sevas.filter(s=>s.active);
+  $("sevas").innerHTML = list.length ? list.map(s=>'<label class="seva"><input type="checkbox" value="'+esc(s.name)+'"><div><b>'+esc(s.name)+'</b><span>'+esc(s.desc)+'</span></div></label>').join("") : "<p>No sevas are open yet. Please check back soon.</p>";
+  $("count").textContent = "No seva selected yet";
+}
+$("sevas").addEventListener("change",()=>{const n=checked("#sevas").length;$("count").textContent = n? n+" seva selected":"No seva selected yet"});
+$("vVol").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const name=$("name").value.trim(), wa=$("wa").value.trim(), sevas=checked("#sevas"), days=checked("#days"), slots=checked("#slots");
+  if(!name) return say("vmsg","Please enter your name.","err");
+  if(wa.replace(/\D/g,"").length<10) return say("vmsg","Please enter a valid WhatsApp number.","err");
+  if(!sevas.length) return say("vmsg","Please select at least one seva.","err");
+  if(!days.length) return say("vmsg","Please select at least one day.","err");
+  if(!slots.length) return say("vmsg","Please select at least one time slot.","err");
+  $("vgo").disabled=true; say("vmsg","Submitting...");
+  try{
+    await api("signup",{name,whatsapp:wa,sevas,days,slots});
+    $("who").textContent=name;
+    $("doneTxt").textContent = sevas.length+" seva choice"+(sevas.length>1?"s":"")+" received. Hare Krishna!";
+    show("vDone");
+    $("vVol").reset(); say("vmsg","");
+  }catch(err){say("vmsg",err.message,"err")}
+  $("vgo").disabled=false;
+});
+$("again").onclick = ()=>{$("count").textContent="No seva selected yet";show("vVol")};
+
+/* admin */
+async function loadAdmin(){
+  const [a,b] = await Promise.all([api("sevas"),api("signups")]);
+  $("alist").innerHTML = a.sevas.map(s=>'<div class="row"><div><b>'+esc(s.name)+'</b>'+(s.active?'':' (hidden)')+'<small>'+esc(s.desc)+'</small></div><button class="sm" data-n="'+esc(s.name)+'">Remove</button></div>').join("") || "<p>No sevas yet.</p>";
+  const tally = {}; b.rows.forEach(r=>tally[r[3]]=(tally[r[3]]||0)+1);
+  $("tally").innerHTML = Object.keys(tally).map(k=>'<span>'+esc(k)+': <b>'+tally[k]+'</b></span>').join("") || "<span>No sign-ups yet</span>";
+  $("tbl").innerHTML = '<tr><th>Time</th><th>Name</th><th>WhatsApp number</th><th>Seva</th><th>Days</th><th>Time slots</th></tr>'+b.rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join("")+'</tr>').join("");
+}
+$("ago").onclick = async ()=>{
+  const name=$("an").value.trim(); if(!name) return say("amsg","Enter a seva name.","err");
+  $("ago").disabled=true;
+  try{await api("addSeva",{name,desc:$("ad").value.trim()});$("an").value="";$("ad").value="";say("amsg",name+" added.","ok");await loadAdmin()}
+  catch(err){say("amsg",err.message,"err")}
+  $("ago").disabled=false;
+};
+$("alist").addEventListener("click", async e=>{
+  const n = e.target.dataset && e.target.dataset.n; if(!n) return;
+  if(!confirm('Remove "'+n+'"? Existing sign-ups stay in the sheet.')) return;
+  try{await api("deleteSeva",{name:n});await loadAdmin()}catch(err){say("amsg",err.message,"err")}
 });
 
-$("form").addEventListener("submit", async e=>{
-  e.preventDefault();
-  const msg = $("msg"); msg.className = ""; msg.textContent = "";
-  const name = $("name").value.trim(), phone = $("phone").value.trim(), sevas = picked();
-  if(!name){msg.className="err";msg.textContent="Please enter your name.";$("name").focus();return}
-  if(phone.replace(/\D/g,"").length < 10){msg.className="err";msg.textContent="Please enter a valid phone number.";$("phone").focus();return}
-  if(!sevas.length){msg.className="err";msg.textContent="Please select at least one seva.";return}
-  const data = {name, phone, sevas, notes:$("notes").value.trim()};
-  $("go").disabled = true; $("go").textContent = "Submitting...";
-  try{
-    if(SCRIPT_URL){
-      await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data)});
-    }else{
-      console.log("Test mode (no SCRIPT_URL set):",data);
-    }
-    $("who").textContent = name;
-    $("form").hidden = true; $("done").hidden = false;
-    window.scrollTo({top:0,behavior:"smooth"});
-  }catch(err){
-    msg.className = "err";
-    msg.textContent = "Could not submit. Please check your internet and try again.";
-    $("go").disabled = false; $("go").textContent = "Submit my seva choices";
-  }
-});
+/* resume session */
+if(S && S.role){ enter().catch(()=>{sessionStorage.removeItem("skbs");S=null;show("vLogin")}) }
 </script>
 </body>
 </html>
