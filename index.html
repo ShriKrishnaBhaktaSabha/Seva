@@ -152,15 +152,32 @@ function esc(t){const d=document.createElement("div");d.textContent=t;return d.i
 function show(id){VIEWS.forEach(v=>$(v).hidden = v!==id);$("logout").hidden = id==="vLogin";$("chpw").hidden = !(S&&S.role==="volunteer"&&id!=="vLogin"&&id!=="vPass");window.scrollTo(0,0)}
 function prefill(){ if(S&&S.name&&!$("name").value) $("name").value=S.name }
 function say(id,t,c){$(id).textContent=t;$(id).className="msg "+(c||"")}
+const wait = ms => new Promise(z=>setTimeout(z,ms));
 async function api(action, extra){
   if(!API_URL) throw new Error("API_URL is not set in index.html");
-  const r = await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body:JSON.stringify(Object.assign({action,user:S&&S.user,pass:S&&S.pass},extra||{}))});
-  const t = await r.text(); let j;
-  try{ j = JSON.parse(t) }catch(e){ throw new Error("The server sent an unexpected reply. Please ask the admin to deploy the latest script version.") }
-  if(!j.ok) throw new Error(j.error||"Something went wrong");
-  return j;
+  // Read-only requests are retried automatically; saving requests are not, to avoid saving twice.
+  const tries = ["login","sevas","users","signups","adminData"].includes(action) ? 3 : 1;
+  for(let i=1;;i++){
+    let t;
+    try{
+      const r = await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+        body:JSON.stringify(Object.assign({action,user:S&&S.user,pass:S&&S.pass},extra||{}))});
+      t = await r.text();
+    }catch(e){
+      if(i<tries){await wait(900);continue}
+      throw new Error("Could not reach the server. Please check your internet and try again.");
+    }
+    let j;
+    try{ j = JSON.parse(t) }catch(e){
+      if(i<tries){await wait(900);continue}
+      const er = new Error("The server did not reply properly (it may be busy). Please check whether it was saved, then try again if needed. If this keeps happening, ask the admin to deploy the latest script version.");
+      er.transient = true; throw er;
+    }
+    if(!j.ok) throw new Error(j.error||"Something went wrong");
+    return j;
+  }
 }
+function fail(id,err){ say(id,err.message,"err"); if(err.transient && S && S.role==="admin") loadAdmin().catch(()=>{}) }
 function chips(box, items){
   $(box).innerHTML = items.map(i=>'<label class="chip"><input type="checkbox" value="'+esc(i[0])+'">'+esc(i[0])+(i[1]?' <small>'+esc(i[1])+'</small>':'')+'</label>').join("");
 }
@@ -236,7 +253,7 @@ $("again").onclick = ()=>{prefill();show("vVol")};
 
 /* admin */
 async function loadAdmin(){
-  const [a,b,u] = await Promise.all([api("sevas"),api("signups"),api("users")]);
+  const x = await api("adminData"); const a={sevas:x.sevas}, b={rows:x.rows}, u={users:x.users};
   $("alist").innerHTML = groupSevas(a.sevas).map(g=>{
     const n = esc(g.name);
     return '<div class="row"><div><b>'+n+'</b><small>'+esc(g.desc)+'</small><div class="chips" style="margin-top:6px">'+
@@ -254,7 +271,7 @@ $("ago").onclick = async ()=>{
   $("ago").disabled=true;
   try{await api("addSeva",{name,cls:$("ac").value.trim(),desc:$("ad").value.trim()});
     $("an").value="";$("ac").value="";$("ad").value="";say("amsg",name+" added.","ok");await loadAdmin()}
-  catch(err){say("amsg",err.message,"err")}
+  catch(err){fail("amsg",err)}
   $("ago").disabled=false;
 };
 $("alist").addEventListener("click", async e=>{
@@ -262,7 +279,7 @@ $("alist").addEventListener("click", async e=>{
   const s=b.dataset.s, c=b.dataset.c;
   const q = c ? 'Remove the class "'+c+'" from "'+s+'"?' : 'Remove "'+s+'" and all its classes?';
   if(!confirm(q+' Existing sign-ups stay in the sheet.')) return;
-  try{await api("deleteSeva",{name:s,cls:c||""});await loadAdmin()}catch(err){say("amsg",err.message,"err")}
+  try{await api("deleteSeva",{name:s,cls:c||""});await loadAdmin()}catch(err){fail("amsg",err)}
 });
 
 $("ugo").onclick = async ()=>{
@@ -272,7 +289,7 @@ $("ugo").onclick = async ()=>{
   try{await api("addUser",{username,name,password});
     $("un").value="";$("uname").value="";$("up").value="";
     say("umsg","Login created for "+username+". Share the username and starting password with the volunteer.","ok");await loadAdmin()}
-  catch(err){say("umsg",err.message,"err")}
+  catch(err){fail("umsg",err)}
   $("ugo").disabled=false;
 };
 $("ulist").addEventListener("click", async e=>{
@@ -286,7 +303,7 @@ $("ulist").addEventListener("click", async e=>{
       if(!confirm('Remove the login for "'+u+'"? Their past sign-ups stay in the sheet.')) return;
       await api("deleteUser",{username:u}); await loadAdmin(); say("umsg",u+" removed.","ok");
     }
-  }catch(err){say("umsg",err.message,"err")}
+  }catch(err){fail("umsg",err)}
 });
 
 /* change password (volunteers) */
