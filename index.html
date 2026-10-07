@@ -131,7 +131,8 @@ async function api(action, extra){
   if(!API_URL) throw new Error("API_URL is not set in index.html");
   const r = await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
     body:JSON.stringify(Object.assign({action,user:S&&S.user,pass:S&&S.pass},extra||{}))});
-  const j = await r.json();
+  const t = await r.text(); let j;
+  try{ j = JSON.parse(t) }catch(e){ throw new Error("The server sent an unexpected reply. Please ask the admin to deploy the latest script version.") }
   if(!j.ok) throw new Error(j.error||"Something went wrong");
   return j;
 }
