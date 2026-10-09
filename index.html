@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seva Sign-up · Shri Krishna Bhakta Sabha</title>
 <link rel="icon" href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCABAAEADASIAAhEBAxEB/8QAHAAAAQUBAQEAAAAAAAAAAAAAAQIEBQYHAAMI/8QALhAAAgEDAwMCBQMFAAAAAAAAAQIDAAQRBRIhBjFBE1EHIjJhcRRCgRVDUmKR/8QAGAEAAwEBAAAAAAAAAAAAAAAAAAECAwT/xAAkEQACAgAEBgMAAAAAAAAAAAAAAQIRAxIhQQQTIlFhgTEy4f/aAAwDAQACEQMRAD8A+oZXYPgEgfakh3LYBoyqWc4pSAL/ADUgEFuxY5rtx9649/vWf/E/rXUembO1k0TT1vN92ttNNKrGNDjO3jz4z2Hbk8U0raivlibpWaBk+9dk+5FVLprquTUrKSa8t4Y2t39O6jhcl7c+GZTyUI5BHjxwatmQRlSCDzkUr1rcfkSXcHBYmijsZAC2RmuIyMHkUmMEOM+9AHq+A33od/z9qDnDmonqWVoNHmlWURImDI5zkLnHcduSMn2zQ20tFYLye17qJt7qOFI95Pc57fmsc+Kthda/efD7QYHlS1nnmnuwjbSXQqCef3As2O5BbdjAzVsvNRv7GCSXSdPluGmUFJiweCFd20mRicE4IxjjGCc1WL7QJeomnPVrI13DbT/pxCcJbXBBXk8KXfYR2/tkcbuXw+bOsR+fQsSnFxQBpVp0b8Qum76zkjs4r6V9Ovo5rpn9VGj3KHLMcMrbBnjcSOMmtR0S/aOCytZYyo9MAMxxx4H/ADFY3N01bdWX2lvJ+ptxFsczz3jOJpe4cjsQBExxjxitJjuJ77SnkupIp7mxupred4FKRy7G+oDJ2scjjJGc+wquIjJ1PdCw5LVbMvA/FKUcjioPpSdrjTnkEqyweoyxkEt2OD837hnsR7HmpxfqFZxbatqi3WwJAS59qb3tubm3MYbY2QVbGQpHkjz+KcSfWaBHHGTTEZpPc3F9PdadFHKlsyyxzIw2JllYLH4y2cE+BjP2qoNJbanrkFt03dySaPrPrPPC8hwsq22W3OxypD7Qf9se1XjqrUdak1+S10qzi1CBFQlIztcJj50Y9+SRhlPHIYDgmEbR7uKxWax6J0dGS5jElsLOOVxEyFn+Zv3A+/ckDsc104XTd+v0xlqK6m1Czt9Dur690R5dUZGSzkV1CTyEFY2lCnCPwRkjkA4PO2orou8udP0NoDJJNaR3MkczqMr6uFLMwOcqzlhnxtI80+Fvc3ljE1n0Vpc4mWN4ZWtYlfaH+bcu1TkqOcfSWGB3xP8ASV1e2d3Y2UHSP9PtGmLbop9ywq27e3fvuxnx83uKc/rS7iWr1Lro0XpWSOwYPMBIwK7SMjgY8YGB/FSK/UKHbxzRU8iuU3PKYlZTgZpLBJo2RhlWBVh7g96XKjNJkA4+1IEbqcgGgDPrX4amzuhcafrdxayq7snpw8Dc+SPqyRjCkZwQAe+TXpa9A6hbS5j6kuX3OZmd4jv9T0vS3cPzlSM55yq4rQQrEcqQaUA3+JrXmy7k5EUa/wCjr+4nt2h1qe3mSyS1lvFyZZyoIyyk4zyWDghskg5FNIPhxLaXCz2vUN7FMocAiPjDsWYY3eSckdsgHg1omCTnBriCBwpJpcyXcMiGel28ljpdpbT3MlzJBEsTTyfVIQMbj35OMmnKNukXgAZoMjk52nHtRRW9RTtIANZtlH//2Q==">
+<meta name="theme-color" content="#1B2A5C">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Seva">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700&family=Rozha+One&display=swap" rel="stylesheet">
 <style>
@@ -38,16 +43,36 @@ input[type=text],input[type=tel],input[type=password]{display:block;width:100%;m
 .grp .chip input{width:18px;height:18px;margin:0}
 .seva:has(input:checked),.chip:has(input:checked){border-color:var(--teal);background:#E6F4F3}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1.5px solid var(--line);border-radius:999px;cursor:pointer;background:var(--white)}
+.chip{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;padding:9px 14px;border:1.5px solid var(--line);border-radius:999px;cursor:pointer;background:var(--white)}
 .chip input{accent-color:var(--teal);width:18px;height:18px}
 .chip small{color:#4A566B;white-space:nowrap}
 .seva span.spots{color:var(--teal);font-weight:600}
 .seva span.spots.fullt{color:var(--red)}
-.seva.full,.chip.full{cursor:not-allowed;opacity:.6;background:#F1F1F1}
+.seva.full,.chip.full{background:#FFF4D6;border-color:#E3B341}
 .ctag{display:inline-flex;gap:2px}
 select{display:block;width:100%;margin-top:4px;padding:10px 12px;font:inherit;border:1.5px solid var(--line);border-radius:8px;background:var(--white)}
 td select{width:auto;margin:0;padding:4px 8px;font-size:14px;border-radius:999px}
-select.st-Pending{background:#FFF4D6}select.st-Confirmed{background:#E6F4F3}select.st-Assigned{background:#E4E8FA}
+select.st-Pending{background:#FFF4D6}select.st-Confirmed{background:#E6F4F3}select.st-Assigned{background:#E4E8FA}select.st-Waitlist{background:#FFE9D6}
+dialog{border:0;border-radius:14px;padding:22px;max-width:520px;width:calc(100% - 32px);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.tabs{display:flex;gap:8px;margin:0 0 12px}
+.tabs button{width:auto;padding:8px 18px;font-size:16px;background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.tabs button.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+button.auto{width:auto;padding:9px 16px;font-size:15px}
+.hint{margin:10px 0 0;font-size:15px;color:#4A566B}
+.grp2{border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:12px}
+.grp2 h3{margin:0 0 6px;font-size:17px}
+.cap{font-weight:400;font-size:14px;color:var(--teal);margin-left:8px}
+.rrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.rrow small{display:block;color:#4A566B}
+.none{margin:0;color:#4A566B}
+td .tag{margin-right:4px}
+.share{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.share img{border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff}
+a.btnlink{display:inline-block;padding:9px 16px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-weight:600;text-decoration:none;font-size:15px;margin:6px 6px 0 0}
+details.how{margin-top:14px;color:#4A566B}
+details.how summary{cursor:pointer;font-weight:600;color:var(--indigo)}
+details.how p{margin:8px 0 0}
 .badge{background:var(--indigo);color:#fff;border-radius:999px;font-size:12px;padding:1px 8px;vertical-align:middle}
 td a{color:var(--teal);font-weight:600}
 .when{border:1.5px solid var(--line);border-radius:10px;padding:14px;margin-top:12px}
@@ -87,6 +112,10 @@ th{background:var(--mist);color:var(--indigo)}
   <label class="f">Password<input type="password" id="lp" autocomplete="current-password" required></label>
   <button type="submit" id="lgo">Log in</button>
   <div class="msg" id="lmsg" role="status"></div>
+  <details class="how"><summary>Add this page to your phone's home screen</summary>
+    <p><b>Android (Chrome):</b> tap the ⋮ menu, then "Add to Home screen" or "Install app".</p>
+    <p><b>iPhone (Safari):</b> tap the Share button, then "Add to Home Screen".</p>
+  </details>
 </form>
 
 <form id="vVol" class="panel" hidden novalidate>
@@ -130,6 +159,24 @@ th{background:var(--mist);color:var(--indigo)}
 
 <div id="vAdmin" hidden>
   <div class="panel">
+    <h2>Share the sign-up page</h2>
+    <div class="share">
+      <img id="qrimg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUgAAAFIAQMAAAAI2vVwAAAABlBMVEX///8bKlxIB04YAAABu0lEQVR42u2asXIEIQxDpcz9/y8rBbYxqTBXRp4rWJa54o1tCVjA4XA4HC9BANAxZj7vEQH8XP/nf16JzTPYSYLysb0xz5v4FFEmPQoQ2xxhnkOeWeACIYpH2ZvS60otqITISkxTeu2fWkMJ2ULdP5/qvSpbFMWgyP7GPOchAYJauprSW71LUpikLPY1iHnzHPp5NosEMWcEyn7+QY9KgzJJUYoUCWqe9ysVqSqFl+cSe3ErkikNpUhCa6LRRxdh8xzrUVY5oGQYv1Ak8xyl5+Hh60xEcv984NmkKAt+JWm2APMcZ6ciL9vWM5PT9T5bSQIk44Rp5+jyn87PsZ8P487mnWofn/PmOdgfUXtQaHWsMs9rnrHDBPfFERQHoUjW5jnab6Y/Ovx8eCXr0dwuKU/r0DQdsP981qN1wtSOlpByJPfP4cpAKUFgHIlsrTIlPIWqX+6NZp3jmedNfLB7Jdm/CFHmLazv8/6JuIsrA/XHN5nnID/bRQfyCyaKUf3un1+slJbYx26TzOw1pUl+VvVTcTFHEXkf5/455ckSofU1GPOao7ag5jngqeZCY9AE3vr+6D8dDofDcR2/yUc8UkwU6Y4AAAAASUVORK5CYII=" width="170" height="170" alt="QR code that opens the sign-up page">
+      <div>
+        <p style="margin-top:0">Volunteers can scan this code or open the link:</p>
+        <p style="word-break:break-all"><a id="plink" href="#" target="_blank" rel="noopener"></a></p>
+        <button class="plain auto" id="cplink" type="button">Copy link</button>
+        <a class="btnlink" id="wshare" href="#" target="_blank" rel="noopener">Share on WhatsApp</a>
+        <a class="btnlink" id="qrdl" href="#" download="Seva-signup-QR.png">Download QR</a>
+        <div class="msg" id="shmsg" role="status"></div>
+      </div>
+    </div>
+    <details class="how"><summary>How volunteers add this page to their phone's home screen</summary>
+      <p><b>Android (Chrome):</b> tap the ⋮ menu, then "Add to Home screen" or "Install app".</p>
+      <p><b>iPhone (Safari):</b> tap the Share button, then "Add to Home Screen".</p>
+    </details>
+  </div>
+  <div class="panel">
     <h2>Add a seva</h2>
     <label class="f">Seva name<input type="text" id="an"></label>
     <label class="f">Class(es) <small>(separate with commas; leave blank for General)</small><input type="text" id="ac" placeholder="e.g. Shrimad Bhagavad Gita, Durga Saptashati"></label>
@@ -150,25 +197,55 @@ th{background:var(--mist);color:var(--indigo)}
   </div>
   <div class="panel">
     <h2>All sevas</h2>
-    <p style="margin-top:0;color:#4A566B">Tap a class name to set how many volunteers are needed (0 = no limit), or tap × to remove that class. Remove seva deletes the whole seva. You can also edit the "Sevas" tab in the Google Sheet (the Needed column, or set Active to No to hide a row).</p>
+    <p style="margin-top:0;color:#4A566B">Tap a class name to set how many volunteers are needed (0 = no limit), or tap × to remove that class. Remove seva deletes the whole seva, and Edit description changes the text volunteers see. You can also edit the "Sevas" tab in the Google Sheet (the Needed column, or set Active to No to hide a row).</p>
     <div id="alist"></div>
   </div>
-  <div class="panel">
+  <div class="panel" id="sp">
     <h2>Sign-ups</h2>
     <div class="tally" id="tally"></div>
-    <label class="f" style="max-width:240px">Show<select id="sf"><option>All</option><option>Pending</option><option>Confirmed</option><option>Assigned</option></select></label>
+    <div class="tabs"><button data-act="tab" data-v="list" class="on">List</button><button data-act="tab" data-v="roster">By seva</button></div>
+    <label class="f" style="max-width:240px">Show<select id="sf"><option>All</option><option>Pending</option><option>Confirmed</option><option>Assigned</option><option>Waitlist</option></select></label>
+    <button class="plain auto" id="dl" data-act="dl">Download as CSV (opens in Excel)</button>
+    <p class="hint">Tap a WhatsApp number to open a chat with a ready message. The message changes with the status.</p>
     <div class="msg" id="smsg" role="status"></div>
-    <div class="scroll"><table id="tbl"></table></div>
+    <div id="listWrap" class="scroll"><table id="tbl"></table></div>
+    <div id="roster" hidden></div>
   </div>
 </div>
 
 </main>
+
+<dialog id="dlg">
+  <form id="edForm" novalidate>
+    <h2>Edit sign-up</h2>
+    <p id="edInfo" style="margin-top:0;color:#4A566B"></p>
+    <label class="f">Name<input type="text" id="en"></label>
+    <label class="f">WhatsApp number<input type="tel" id="ew" inputmode="tel"></label>
+    <h3>Days</h3>
+    <div class="chips" id="edDays"></div>
+    <h3>Time slots</h3>
+    <div class="chips" id="edSlots"></div>
+    <div class="msg" id="emsg" role="status"></div>
+    <button type="submit" id="ego">Save changes</button>
+    <button type="button" id="ecancel" class="plain" style="margin-top:10px">Cancel</button>
+  </form>
+</dialog>
 <script>
 /* ===== EDIT THIS SECTION ===== */
 // Paste your Google Apps Script web app URL (see Code.gs)
 const API_URL = "https://script.google.com/macros/s/AKfycbyvsF5QTrJLpE7PA9xywcXUuL9-MG8BlOKeEDYUIXGQ680IRS8WCt0wTYwNAs3vrwt0Wg/exec";
 const DAYS  = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const SLOTS = [["Early morning","4–7 am"],["Morning","7–11 am"],["Afternoon","11 am–4 pm"],["Evening","4–7 pm"],["Night","after 7 pm"]];
+// The address of this page (used for the share link and QR code). If the address changes, the QR code must be remade.
+const PAGE_URL = "https://shrikrishnabhaktasabha.github.io/Seva/";
+// Ready-made WhatsApp messages the admin can send from the sign-ups list (changes with the status).
+// You can change the wording. {name}, {seva}, {days} and {time} are filled in automatically.
+const MSG = {
+  Pending:   "Hare Krishna {name}! Thank you for volunteering for {seva} ({days}, {time}). We will confirm your seva shortly. - Shri Krishna Bhakta Sabha",
+  Confirmed: "Hare Krishna {name}! Your seva {seva} ({days}, {time}) is confirmed. Thank you for volunteering! - Shri Krishna Bhakta Sabha",
+  Assigned:  "Hare Krishna {name}! You have been assigned to {seva} ({days}, {time}). Thank you for volunteering! - Shri Krishna Bhakta Sabha",
+  Waitlist:  "Hare Krishna {name}! You are on the waiting list for {seva} ({days}, {time}). We will let you know if a spot opens. - Shri Krishna Bhakta Sabha"
+};
 /* ============================= */
 
 const $ = id => document.getElementById(id);
@@ -186,7 +263,10 @@ function show(id){
   $("hb").hidden = $("logout").hidden && $("chpw").hidden && $("mine").hidden;
   window.scrollTo(0,0);
 }
-function prefill(){ if(S&&S.name&&!$("name").value) $("name").value=S.name }
+function prefill(){
+  if(S&&S.name&&!$("name").value) $("name").value=S.name;
+  if(MYWA&&!$("wa").value) $("wa").value=MYWA;
+}
 function say(id,t,c){$(id).textContent=t;$(id).className="msg "+(c||"")}
 const wait = ms => new Promise(z=>setTimeout(z,ms));
 async function api(action, extra){
@@ -250,29 +330,30 @@ async function enter(){
 }
 
 /* volunteer */
-let MINE = [];
+let MINE = [], MYWA = "";
 async function loadVol(){
   const r = await api("volData");
-  MINE = r.mine;
-  const have = new Set(r.mine.map(m=>(m.seva+"|"+m.cls).toLowerCase()));
-  const done = (s,c)=>have.has((s+"|"+c).toLowerCase());
+  MINE = r.mine; MYWA = r.wa || "";
+  const have = new Map(r.mine.map(m=>[(m.seva+"|"+m.cls).toLowerCase(), m.status]));
+  const mark = (s,c)=>have.get((s+"|"+c).toLowerCase());     // undefined, or this person's status for it
   const groups = groupSevas(r.sevas.filter(s=>s.active));
   const isFull = c => c.needed>0 && c.filled>=c.needed;
-  const spots = c => { if(!(c.needed>0)) return ""; const left=c.needed-c.filled; return left<=0 ? "Full" : left+(left===1?" spot":" spots")+" left" };
+  const spots = c => { if(!(c.needed>0)) return ""; const left=c.needed-c.filled; return left<=0 ? "Full · join waiting list" : left+(left===1?" spot":" spots")+" left" };
   $("sevas").innerHTML = groups.length ? groups.map(g=>{
     const n = esc(g.name);
     if(g.classes.length===1 && g.classes[0].cls==="General"){
-      const c = g.classes[0], d = done(g.name,"General"), f = !d && isFull(c), sp = spots(c);
-      return '<label class="seva'+(d?' done':f?' full':'')+'"><input type="checkbox" data-s="'+n+'" data-c="General"'+((d||f)?' disabled':'')+'><div><b>'+n+(d?' ✓':'')+'</b><span>'+(d?'You have signed up for this seva':esc(g.desc))+'</span>'+(sp&&!d?'<span class="spots'+(f?' fullt':'')+'">'+sp+'</span>':'')+'</div></label>';
+      const c = g.classes[0], m = mark(g.name,"General"), d = m!==undefined, f = !d && isFull(c), sp = spots(c);
+      const note = d ? (m==="Waitlist" ? "You are on the waiting list for this seva" : "You have signed up for this seva") : esc(g.desc);
+      return '<label class="seva'+(d?' done':f?' full':'')+'"><input type="checkbox" data-s="'+n+'" data-c="General"'+(f?' data-w="1"':'')+(d?' disabled':'')+'><div><b>'+n+(d?' ✓':'')+'</b><span>'+note+'</span>'+(sp&&!d?'<span class="spots'+(f?' fullt':'')+'">'+sp+'</span>':'')+'</div></label>';
     }
     return '<div class="seva grp"><b>'+n+'</b><span>'+esc(g.desc)+'</span><div class="chips">'+
-      g.classes.map(c=>{const d=done(g.name,c.cls), f=!d&&isFull(c), sp=spots(c);
-        return '<label class="chip'+(d?' done':f?' full':'')+'"><input type="checkbox" data-s="'+n+'" data-c="'+esc(c.cls)+'"'+((d||f)?' disabled':'')+'>'+esc(c.cls)+(d?' ✓':'')+(sp&&!d?' <small>'+sp+'</small>':'')+'</label>'}).join("")+'</div></div>';
+      g.classes.map(c=>{const m=mark(g.name,c.cls), d=m!==undefined, f=!d&&isFull(c), sp=spots(c);
+        return '<label class="chip'+(d?' done':f?' full':'')+'"><input type="checkbox" data-s="'+n+'" data-c="'+esc(c.cls)+'"'+(f?' data-w="1"':'')+(d?' disabled':'')+'>'+esc(c.cls)+(d?(m==="Waitlist"?' ✓ <small>waiting list</small>':' ✓'):'')+(sp&&!d?' <small>'+sp+'</small>':'')+'</label>'}).join("")+'</div></div>';
   }).join("") : "<p>No sevas are open yet. Please check back soon.</p>";
   $("count").textContent = "No seva selected yet";
   prefill();
 }
-const picks = () => [...document.querySelectorAll("#sevas input:checked")].map(i=>({seva:i.dataset.s,cls:i.dataset.c}));
+const picks = () => [...document.querySelectorAll("#sevas input:checked")].map(i=>({seva:i.dataset.s,cls:i.dataset.c,waitlist:i.dataset.w==="1"}));
 $("sevas").addEventListener("change",()=>{const n=picks().length;$("count").textContent = n? n+" seva selected. Choose days and times below.":"No seva selected yet"; renderWhen()});
 
 /* days and time slots, separately for each selected seva */
@@ -286,7 +367,7 @@ function renderWhen(){
   $("whenWrap").hidden = !p.length;
   $("when").innerHTML = p.map(x=>{
     const v = AV[keyOf(x.seva,x.cls)] || {days:[],slots:[]};
-    return '<div class="when" data-k="'+esc(keyOf(x.seva,x.cls))+'"><b>'+esc(x.seva)+(x.cls!=="General"?' · '+esc(x.cls):'')+'</b>'+
+    return '<div class="when" data-k="'+esc(keyOf(x.seva,x.cls))+'"><b>'+esc(x.seva)+(x.cls!=="General"?' · '+esc(x.cls):'')+(x.waitlist?' (waiting list)':'')+'</b>'+
       '<h3>Days</h3><div class="chips" data-g="days">'+chipHtml(DAYS.map(d=>[d]),v.days)+'</div>'+
       '<h3>Time slots</h3><div class="chips" data-g="slots">'+chipHtml(SLOTS,v.slots)+'</div>'+
       (p.length>1?'<button type="button" class="plain copy">Use these days and times for all my sevas</button>':'')+'</div>';
@@ -318,7 +399,7 @@ $("vVol").addEventListener("submit", async e=>{
   $("vgo").disabled=true; say("vmsg","Submitting...");
   try{
     const r = await api("signup",{name,whatsapp:wa,picks:p});
-    const skipped = r.skipped||[], full = r.full||[];
+    const skipped = r.skipped||[], full = r.full||[], wl = r.waitlisted||[];
     if(!r.count){
       say("vmsg", full.length ? "Sorry, "+full.join(", ")+" just filled up. Please choose another seva." : "You have already signed up for the seva you selected. See 'My seva' at the top.","err");
       await loadVol().catch(()=>{}); $("vgo").disabled=false; return;
@@ -326,7 +407,8 @@ $("vVol").addEventListener("submit", async e=>{
     $("who").textContent=name;
     $("doneTxt").textContent = r.count+" seva choice"+(r.count>1?"s":"")+" received. Hare Krishna!"+
       (skipped.length?" (You had already signed up for: "+skipped.join(", ")+".)":"")+
-      (full.length?" (Not added because they are full: "+full.join(", ")+".)":"");
+      (full.length?" (Not added because they are full: "+full.join(", ")+".)":"")+
+      (wl.length?" You are on the waiting list for: "+wl.join(", ")+". If a spot opens, a coordinator can move you in.":"");
     show("vDone");
     $("vVol").reset(); say("vmsg",""); AV = {}; renderWhen();
     loadVol().catch(()=>{});
@@ -337,7 +419,7 @@ $("again").onclick = ()=>{prefill();show("vVol")};
 
 /* my seva */
 function renderMine(list){
-  $("mlist").innerHTML = list.length ? list.map(m=>'<div class="row"><div><b>'+esc(m.seva)+'</b>'+(m.cls&&m.cls!=="General"?' · '+esc(m.cls):'')+'<small>'+esc(m.days||"")+(m.slots?' · '+esc(m.slots):'')+'</small><small>Status: '+esc(m.status||"Pending")+' · Signed up '+esc(m.time)+'</small></div><button class="sm" data-id="'+esc(m.id)+'">Withdraw</button></div>').join("") : '<p style="margin:0;color:#4A566B">You have not signed up for any seva yet.</p>';
+  $("mlist").innerHTML = list.length ? list.map(m=>'<div class="row"><div><b>'+esc(m.seva)+'</b>'+(m.cls&&m.cls!=="General"?' · '+esc(m.cls):'')+'<small>'+esc(m.days||"")+(m.slots?' · '+esc(m.slots):'')+'</small><small>Status: '+(m.status==="Waitlist"?"On the waiting list":esc(m.status||"Pending"))+' · Signed up '+esc(m.time)+'</small></div><button class="sm" data-id="'+esc(m.id)+'">Withdraw</button></div>').join("") : '<p style="margin:0;color:#4A566B">You have not signed up for any seva yet.</p>';
 }
 async function loadMine(){ const r = await api("volData"); MINE = r.mine; renderMine(r.mine) }
 $("mine").onclick = async ()=>{
@@ -354,32 +436,124 @@ $("mlist").addEventListener("click", async e=>{
 });
 
 /* admin */
-let ROWS = [];
-const STATUSES = ["Pending","Confirmed","Assigned"];
-const waLink = n => { const d = String(n).replace(/\D/g,""); return d.length>=8 ? "https://wa.me/"+d : "" };
+let ROWS = [], SEVAROWS = [], VIEW = "list";
+const STATUSES = ["Pending","Confirmed","Assigned","Waitlist"];
+const fill = (t,m)=>t.replace(/\{(\w+)\}/g,(x,k)=>k in m ? m[k] : x);
+const sevaLabel = (s,c)=>s+(c&&c!=="General"?" – "+c:"");
+function waUrl(r){   // r = one sign-up row; link opens WhatsApp with a ready message
+  const d = String(r[2]).replace(/\D/g,""); if(d.length<8) return "";
+  const t = fill(MSG[r[7]]||MSG.Pending,{name:r[1],seva:sevaLabel(r[3],r[6]),days:r[4],time:r[5]});
+  return "https://wa.me/"+d+"?text="+encodeURIComponent(t);
+}
+const waCell = r => { const u = waUrl(r); return u ? '<a href="'+u+'" target="_blank" rel="noopener" title="Open WhatsApp with a ready message">'+esc(r[2])+'</a>' : esc(r[2]) };
+const statusSel = r => '<select class="st st-'+esc(r[7])+'" data-id="'+esc(r[8])+'" aria-label="Status">'+STATUSES.map(s=>'<option'+(s===r[7]?' selected':'')+'>'+s+'</option>').join("")+'</select>';
+const actBtns = r => '<button class="tag" data-act="edit" data-id="'+esc(r[8])+'">Edit</button><button class="tag" data-act="remove" data-id="'+esc(r[8])+'">Remove</button>';
+const shown = () => { const f = $("sf").value; return ROWS.filter(r=>f==="All"||r[7]===f) };
+function groups(){   // one group per seva + class, in the order of the Sevas tab
+  const out = [], idx = {};
+  SEVAROWS.forEach(s=>{ const k=(s.name+"|"+s.cls).toLowerCase(); if(!(k in idx)){ idx[k]=out.length; out.push({seva:s.name,cls:s.cls,needed:s.needed||0,filled:s.filled||0,rows:[]}) } });
+  shown().forEach(r=>{ const c=r[6]||"General", k=(r[3]+"|"+c).toLowerCase(); if(!(k in idx)){ idx[k]=out.length; out.push({seva:r[3],cls:c,needed:0,filled:0,rows:[]}) } out[idx[k]].rows.push(r) });
+  out.forEach(g=>{ g.waiting = ROWS.filter(r=>r[3].toLowerCase()===g.seva.toLowerCase() && (r[6]||"General").toLowerCase()===g.cls.toLowerCase() && r[7]==="Waitlist").length });
+  return out;
+}
 function renderSignups(){
   const bySeva = {}, byStatus = {};
   ROWS.forEach(r=>{ bySeva[r[3]]=(bySeva[r[3]]||0)+1; byStatus[r[7]]=(byStatus[r[7]]||0)+1 });
   $("tally").innerHTML = ROWS.length
     ? STATUSES.map(s=>'<span><b>'+(byStatus[s]||0)+'</b> '+s.toLowerCase()+'</span>').join("")+Object.keys(bySeva).map(k=>'<span>'+esc(k)+': <b>'+bySeva[k]+'</b></span>').join("")
     : "<span>No sign-ups yet</span>";
-  const f = $("sf").value, rows = ROWS.filter(r=>f==="All"||r[7]===f);
-  $("tbl").innerHTML = '<tr><th>Time</th><th>Name</th><th>WhatsApp number</th><th>Seva</th><th>Class</th><th>Days</th><th>Time slots</th><th>Status</th></tr>'+
-    rows.map(r=>{
-      const link = waLink(r[2]);
-      const wa = link ? '<a href="'+link+'" target="_blank" rel="noopener" title="Open WhatsApp chat">'+esc(r[2])+'</a>' : esc(r[2]);
-      const sel = '<select class="st st-'+esc(r[7])+'" data-id="'+esc(r[8])+'" aria-label="Status">'+STATUSES.map(s=>'<option'+(s===r[7]?' selected':'')+'>'+s+'</option>').join("")+'</select>';
-      return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+wa+'</td><td>'+esc(r[3])+'</td><td>'+esc(r[6])+'</td><td>'+esc(r[4])+'</td><td>'+esc(r[5])+'</td><td>'+sel+'</td></tr>';
-    }).join("");
+  document.querySelectorAll("#sp .tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===VIEW));
+  $("listWrap").hidden = VIEW!=="list"; $("roster").hidden = VIEW!=="roster";
+  if(VIEW==="list"){
+    $("tbl").innerHTML = '<tr><th>Time</th><th>Name</th><th>WhatsApp number</th><th>Seva</th><th>Class</th><th>Days</th><th>Time slots</th><th>Status</th><th>Actions</th></tr>'+
+      shown().map(r=>'<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+waCell(r)+'</td><td>'+esc(r[3])+'</td><td>'+esc(r[6])+'</td><td>'+esc(r[4])+'</td><td>'+esc(r[5])+'</td><td>'+statusSel(r)+'</td><td>'+actBtns(r)+'</td></tr>').join("");
+  }else{
+    $("roster").innerHTML = groups().map(g=>{
+      let cap = g.needed>0 ? g.filled+' of '+g.needed+' filled'+(g.filled>=g.needed?' (full)':'') : '';
+      if(g.waiting) cap += (cap?' · ':'')+(g.needed>0&&g.filled<g.needed?'spot open, ':'')+g.waiting+' on waiting list';
+      return '<div class="grp2"><h3>'+esc(g.seva)+(g.cls!=="General"?' · '+esc(g.cls):'')+(cap?'<span class="cap">'+esc(cap)+'</span>':'')+'</h3>'+
+        (g.rows.length ? g.rows.map(r=>'<div class="rrow"><div><b>'+esc(r[1])+'</b> '+waCell(r)+'<small>'+esc(r[4])+' · '+esc(r[5])+'</small></div><div class="chips">'+statusSel(r)+actBtns(r)+'</div></div>').join("") : '<p class="none">No volunteers yet</p>')+'</div>';
+    }).join("") || "<p>No sevas yet.</p>";
+  }
 }
-$("sf").addEventListener("change", renderSignups);
-$("tbl").addEventListener("change", async e=>{
-  const sel = e.target.closest("select[data-id]"); if(!sel) return;
+
+/* CSV download (UTF-8 with a marker so Excel shows every character correctly) */
+function csvCell(v, phone){
+  let t = String(v==null?"":v);
+  if(phone && t) return '="'+t.replace(/"/g,'""')+'"';            // keeps +91... as text in Excel
+  if(/^[=+\-@\t\r]/.test(t)) t = "'"+t;                            // stops a typed "=..." being run as a formula
+  return /[",\n\r]/.test(t) ? '"'+t.replace(/"/g,'""')+'"' : t;
+}
+function downloadCsv(name, header, rows, phoneCol){
+  const body = [header].concat(rows).map((r,ri)=>r.map((v,i)=>csvCell(v, ri>0 && i===phoneCol)).join(",")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff"+body],{type:"text/csv;charset=utf-8"}));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+}
+function downloadView(){
+  const day = new Date().toLocaleDateString("en-CA");
+  if(VIEW==="list"){
+    downloadCsv("seva-signups-"+day+".csv",["Time","Name","WhatsApp number","Seva","Class","Days","Time slots","Status"],
+      shown().map(r=>[r[0],r[1],r[2],r[3],r[6],r[4],r[5],r[7]]),2);
+  }else{
+    const rows = [];
+    groups().forEach(g=>{
+      if(g.rows.length) g.rows.forEach(r=>rows.push([g.seva,g.cls,g.needed||"",r[1],r[2],r[4],r[5],r[7]]));
+      else rows.push([g.seva,g.cls,g.needed||"","(no volunteers yet)","","","",""]);
+    });
+    downloadCsv("seva-roster-"+day+".csv",["Seva","Class","Volunteers needed","Volunteer","WhatsApp number","Days","Time slots","Status"],rows,4);
+  }
+}
+
+/* status, edit and remove */
+async function setStatus(sel){
   const row = ROWS.find(r=>r[8]===sel.dataset.id), prev = row ? row[7] : "Pending";
   sel.disabled = true;
   try{ await api("setStatus",{id:sel.dataset.id,status:sel.value}); if(row) row[7]=sel.value; say("smsg","Status updated.","ok"); renderSignups() }
   catch(err){ sel.value = prev; sel.disabled = false; fail("smsg",err) }
+}
+async function removeSignup(id){
+  const r = ROWS.find(x=>x[8]===id); if(!r) return;
+  if(!confirm("Remove "+r[1]+"'s sign-up for "+sevaLabel(r[3],r[6])+"? This cannot be undone from the app.")) return;
+  try{ await api("removeSignup",{id}); await loadAdmin(); say("smsg","Sign-up removed.","ok") }
+  catch(err){ fail("smsg",err) }
+}
+let EDIT_ID = "";
+function openEdit(id){
+  const r = ROWS.find(x=>x[8]===id); if(!r) return;
+  EDIT_ID = id; say("emsg","");
+  $("edInfo").textContent = sevaLabel(r[3],r[6])+" (to change the seva, remove this sign-up and add a new one)";
+  $("en").value = r[1]; $("ew").value = r[2];
+  $("edDays").innerHTML = chipHtml(DAYS.map(d=>[d]), r[4].split(", "));
+  $("edSlots").innerHTML = chipHtml(SLOTS, r[5].split(", "));
+  $("dlg").showModal();
+}
+$("ecancel").onclick = ()=>$("dlg").close();
+$("edForm").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const name=$("en").value.trim(), whatsapp=$("ew").value.trim();
+  const days=[...$("edDays").querySelectorAll("input:checked")].map(i=>i.value), slots=[...$("edSlots").querySelectorAll("input:checked")].map(i=>i.value);
+  if(!name) return say("emsg","Enter a name.","err");
+  if(whatsapp.replace(/\D/g,"").length<10) return say("emsg","Enter a valid WhatsApp number.","err");
+  if(!days.length||!slots.length) return say("emsg","Choose at least one day and one time slot.","err");
+  $("ego").disabled = true;
+  try{ await api("editSignup",{id:EDIT_ID,name,whatsapp,days,slots}); $("dlg").close(); await loadAdmin(); say("smsg","Sign-up updated.","ok") }
+  catch(err){ say("emsg",err.message,"err") }
+  $("ego").disabled = false;
 });
+
+$("sf").addEventListener("change", renderSignups);
+$("sp").addEventListener("change", e=>{ const sel = e.target.closest("select[data-id]"); if(sel) setStatus(sel) });
+$("sp").addEventListener("click", e=>{
+  const b = e.target.closest("button[data-act]"); if(!b) return;
+  const act = b.dataset.act;
+  if(act==="tab"){ VIEW = b.dataset.v; renderSignups() }
+  else if(act==="dl") downloadView();
+  else if(act==="edit") openEdit(b.dataset.id);
+  else if(act==="remove") removeSignup(b.dataset.id);
+});
+
 async function loadAdmin(){
   const x = await api("adminData"); const a={sevas:x.sevas}, b={rows:x.rows}, u={users:x.users};
   $("alist").innerHTML = groupSevas(a.sevas).map(g=>{
@@ -389,7 +563,7 @@ async function loadAdmin(){
         const lab = c.needed>0 ? c.filled+' of '+c.needed+' filled'+(c.filled>=c.needed?' · full':'') : c.filled+' signed up · no limit';
         return '<span class="ctag"><button class="tag" data-do="needed" data-s="'+n+'" data-c="'+esc(c.cls)+'" data-n="'+c.needed+'" title="Set how many volunteers are needed">'+esc(c.cls)+' · '+lab+'</button><button class="tag" data-do="del" data-s="'+n+'" data-c="'+esc(c.cls)+'" title="Remove this class" aria-label="Remove class '+esc(c.cls)+'">×</button></span>';
       }).join("")+
-      '</div></div><button class="sm" data-do="delseva" data-s="'+n+'">Remove seva</button></div>';
+      '</div></div><div class="chips"><button class="tag" data-do="desc" data-s="'+n+'" data-d="'+esc(g.desc)+'">Edit description</button><button class="sm" data-do="delseva" data-s="'+n+'">Remove seva</button></div></div>';
   }).join("") || "<p>No sevas yet.</p>";
   $("urWrap").hidden = !S.owner;
   const me = String(S.user||"").toLowerCase();
@@ -398,7 +572,7 @@ async function loadAdmin(){
     return '<div class="row"><div><b>'+esc(x.username)+'</b>'+(adm?' <span class="badge">Admin</span>':'')+(self?' (you)':'')+'<small>'+esc(x.name||"No name given")+'</small></div>'+
       (can?'<div class="chips"><button class="tag" data-u="'+esc(x.username)+'" data-do="reset">Reset password</button><button class="sm" data-u="'+esc(x.username)+'" data-do="del">Remove</button></div>':'')+'</div>';
   }).join("") || '<p style="color:#4A566B;margin-bottom:0">No logins yet. Create one above.</p>';
-  ROWS = b.rows; renderSignups();
+  ROWS = b.rows; SEVAROWS = a.sevas; renderSignups();
 }
 $("ago").onclick = async ()=>{
   const name=$("an").value.trim(); if(!name) return say("amsg","Enter a seva name.","err");
@@ -418,6 +592,10 @@ $("alist").addEventListener("click", async e=>{
       const num = parseInt(v,10);
       if(isNaN(num)||num<0) return say("amsg","Please enter a whole number (0 for no limit).","err");
       await api("setNeeded",{name:s,cls:c,needed:num}); say("amsg","Updated.","ok");
+    }else if(act==="desc"){
+      const v = prompt('Description for "'+s+'" (what volunteers see):', b.dataset.d||"");
+      if(v===null) return;
+      await api("setDescription",{name:s,desc:v.trim()}); say("amsg","Description updated.","ok");
     }else{
       const q = act==="del" ? 'Remove the class "'+c+'" from "'+s+'"?' : 'Remove "'+s+'" and all its classes?';
       if(!confirm(q+' Existing sign-ups stay in the sheet.')) return;
@@ -467,6 +645,15 @@ $("vPass").addEventListener("submit", async e=>{
   }catch(err){say("pmsg",err.message,"err")}
   $("pgo").disabled=false;
 });
+
+/* share panel */
+$("plink").textContent = PAGE_URL; $("plink").href = PAGE_URL;
+$("wshare").href = "https://wa.me/?text="+encodeURIComponent("Hare Krishna! Please sign up for seva at Shri Krishna Bhakta Sabha here: "+PAGE_URL);
+$("qrdl").href = $("qrimg").src;
+$("cplink").onclick = async ()=>{
+  try{ await navigator.clipboard.writeText(PAGE_URL); say("shmsg","Link copied.","ok") }
+  catch(e){ prompt("Copy this link:",PAGE_URL) }
+};
 
 /* resume session */
 if(S && S.role){ enter().catch(()=>{sessionStorage.removeItem("skbs");S=null;show("vLogin")}) }
