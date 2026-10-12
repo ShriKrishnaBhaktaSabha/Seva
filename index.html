@@ -74,6 +74,8 @@ code{background:var(--mist);border-radius:6px;padding:2px 6px;font-size:15px}
 .attn small{display:block;color:#4A566B}
 #vHelp details.how{margin-top:0;padding:12px 0;border-top:1px solid var(--line)}
 #vHelp details.how:first-of-type{border-top:0}
+.chk{display:flex;gap:10px;align-items:center;margin:6px 0;font-weight:600}
+.chk input{width:20px;height:20px;accent-color:var(--teal);flex:none}
 .anav{position:sticky;top:0;z-index:5;display:flex;gap:8px;overflow-x:auto;padding:10px 0;background:var(--mist);margin:0 0 12px}
 .anav button{width:auto;flex:none;padding:8px 14px;font-size:15px;background:#fff;color:var(--indigo);border:1.5px solid var(--line)}
 #vAdmin .panel{scroll-margin-top:64px}
@@ -303,6 +305,20 @@ th{background:var(--mist);color:var(--indigo)}
     <button class="plain auto" id="cuCheck" type="button">Check what would be removed</button>
     <div class="msg" id="cuMsg" role="status"></div>
     <div id="cuRes"></div>
+  </div>
+  <div class="panel" id="resetPanel" hidden>
+    <h2>Delete test data (start fresh)</h2>
+    <p style="margin-top:0;color:#4A566B">Use this to remove the sign-ups and logins you made while testing, before the real volunteers start. Your list of sevas and your admin logins are kept.</p>
+    <div style="font-weight:600;margin-bottom:6px">What to delete</div>
+    <label class="chk"><input type="checkbox" id="rsSign" checked> Sign-ups</label>
+    <label class="chk"><input type="checkbox" id="rsVol" checked> Volunteer logins (admin logins are kept)</label>
+    <label class="chk"><input type="checkbox" id="rsAtt" checked> Attendance records</label>
+    <label class="chk"><input type="checkbox" id="rsAct" checked> Activity log</label>
+    <label class="chk"><input type="checkbox" id="rsSum" checked> Clean-up summary</label>
+    <label class="f" style="margin-top:14px">Only things made before this date <small>(leave empty to delete everything)</small><input type="date" id="rsDate"></label>
+    <button class="plain auto" id="rsCheck" type="button">Check what would be deleted</button>
+    <div class="msg" id="rsMsg" role="status"></div>
+    <div id="rsRes"></div>
   </div>
 </div>
 
@@ -843,6 +859,7 @@ async function loadAdmin(){
   }).join("") || "<p>No sevas yet.</p>";
   $("urWrap").hidden = !S.owner;
   $("cleanup").hidden = !S.owner;
+  $("resetPanel").hidden = !S.owner;
   const me = String(S.user||"").toLowerCase();
   $("ulist").innerHTML = u.users.map(x=>{
     const adm = x.role==="admin", self = x.username.toLowerCase()===me, can = !self && (!adm || S.owner);
@@ -1033,6 +1050,44 @@ function applyZoom(){
 }
 $("zoom").onclick = ()=>{ zi = (zi+1)%ZOOMS.length; applyZoom() };
 applyZoom();
+
+/* delete test data (owner only) */
+const RS_NAMES = {signups:"Sign-ups", volunteers:"Volunteer logins", attendance:"Attendance records", activity:"Activity log entries", summary:"Clean-up summary rows"};
+const rsSections = () => ({signups:$("rsSign").checked, volunteers:$("rsVol").checked, attendance:$("rsAtt").checked, activity:$("rsAct").checked, summary:$("rsSum").checked});
+function rsReset(){ $("rsRes").innerHTML = ""; say("rsMsg","") }
+["rsSign","rsVol","rsAtt","rsAct","rsSum","rsDate"].forEach(id=>$(id).addEventListener("change",rsReset));
+$("rsCheck").onclick = async ()=>{
+  const sections = rsSections(), before = $("rsDate").value;
+  if(!Object.values(sections).some(Boolean)) return say("rsMsg","Tick what you want to delete.","err");
+  $("rsCheck").disabled = true; say("rsMsg","Checking...");
+  try{
+    const r = await api("resetPreview",{sections,before});
+    if(!Object.values(r.counts).reduce((a,b)=>a+b,0)){ $("rsRes").innerHTML = ""; say("rsMsg","Nothing to delete.","ok") }
+    else{
+      say("rsMsg","");
+      $("rsRes").innerHTML = '<p style="margin-bottom:4px">This would delete:</p><ul style="margin-top:0">'+Object.keys(r.counts).map(k=>'<li>'+RS_NAMES[k]+': <b>'+r.counts[k]+'</b></li>').join("")+'</ul>'+
+        '<p class="hint" style="color:var(--red);font-weight:600;margin-top:0">This cannot be undone from the app. A backup copy of your Sheet is made first.</p>'+
+        '<label class="f">Type DELETE to confirm<input type="text" id="rsType" autocomplete="off" autocapitalize="characters"></label>'+
+        '<button id="rsGo" type="button" disabled style="background:#fff;color:var(--red);border:2px solid var(--red)">Delete now</button>';
+      $("rsType").oninput = ()=>{ $("rsGo").disabled = $("rsType").value.trim()!=="DELETE" };
+      $("rsGo").onclick = ()=>runReset(sections,before,false);
+    }
+  }catch(err){ say("rsMsg",err.message,"err") }
+  $("rsCheck").disabled = false;
+};
+async function runReset(sections,before,skipBackup){
+  const go = $("rsGo"); if(go) go.disabled = true; say("rsMsg","Working... please wait.");
+  try{
+    const r = await api("resetData",{sections,before,confirm:"DELETE",skipBackup:!!skipBackup});
+    $("rsRes").innerHTML = "";
+    const parts = Object.keys(r.removed).filter(k=>r.removed[k]).map(k=>RS_NAMES[k].toLowerCase()+": "+r.removed[k]);
+    say("rsMsg","Deleted ("+(parts.join(", ")||"nothing")+")"+(r.backedUp?". A backup copy was made first.":"."),"ok");
+    await loadAdmin();
+  }catch(err){
+    if(err.needBackup && confirm(err.message+"\n\nDelete anyway, without a backup?")) return runReset(sections,before,true);
+    say("rsMsg",err.message,"err"); const g = $("rsGo"); if(g) g.disabled = false;
+  }
+}
 
 /* help page */
 let HELP_FROM = "vLogin";
