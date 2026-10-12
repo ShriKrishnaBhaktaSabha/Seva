@@ -202,10 +202,11 @@ th{background:var(--mist);color:var(--indigo)}
   <div class="panel" id="bv">
     <h2>Volunteers for each seva</h2>
     <label class="f">Seva<select id="bvSeva"></select></label>
+    <label class="f">Volunteer<select id="bvPerson"></select></label>
     <label class="f" style="max-width:240px">Show<select id="bvStatus"><option>All</option><option>Pending</option><option>Confirmed</option><option>Assigned</option><option>Waitlist</option></select></label>
     <div class="tally" id="bvSum"></div>
     <button class="plain auto" type="button" data-act="bvdl">Download this list (CSV)</button>
-    <p class="hint">Tap a WhatsApp number to message the volunteer. Use the drop-down next to a name to change their status.</p>
+    <p class="hint">Pick a seva to see its volunteers, or pick a volunteer to see all the sevas they chose. Tap a WhatsApp number to message them. Use the drop-down next to a name to change a status.</p>
     <div class="msg" id="bvMsg" role="status"></div>
     <div id="bvList"></div>
   </div>
@@ -307,15 +308,16 @@ th{background:var(--mist);color:var(--indigo)}
     <div id="cuRes"></div>
   </div>
   <div class="panel" id="resetPanel" hidden>
-    <h2>Delete test data (start fresh)</h2>
-    <p style="margin-top:0;color:#4A566B">Use this to remove the sign-ups and logins you made while testing, before the real volunteers start. Your list of sevas and your admin logins are kept.</p>
+    <h2>Delete test data or a volunteer's data</h2>
+    <p style="margin-top:0;color:#4A566B">Use this to remove the sign-ups and logins you made while testing, before the real volunteers start. Your list of sevas and your admin logins are kept. Or pick one volunteer below, for example when someone leaves, to delete everything about that person.</p>
     <div style="font-weight:600;margin-bottom:6px">What to delete</div>
     <label class="chk"><input type="checkbox" id="rsSign" checked> Sign-ups</label>
     <label class="chk"><input type="checkbox" id="rsVol" checked> Volunteer logins (admin logins are kept)</label>
     <label class="chk"><input type="checkbox" id="rsAtt" checked> Attendance records</label>
     <label class="chk"><input type="checkbox" id="rsAct" checked> Activity log</label>
     <label class="chk"><input type="checkbox" id="rsSum" checked> Clean-up summary</label>
-    <label class="f" style="margin-top:14px">Only things made before this date <small>(leave empty to delete everything)</small><input type="date" id="rsDate"></label>
+    <label class="f" style="margin-top:14px">Only for this volunteer <small>(optional)</small><select id="rsPerson"><option value="">Everyone (all test data)</option></select></label>
+    <label class="f">Only things made before this date <small>(leave empty to delete everything)</small><input type="date" id="rsDate"></label>
     <button class="plain auto" id="rsCheck" type="button">Check what would be deleted</button>
     <div class="msg" id="rsMsg" role="status"></div>
     <div id="rsRes"></div>
@@ -866,7 +868,7 @@ async function loadAdmin(){
     return '<div class="row"><div><b>'+esc(x.username)+'</b>'+(adm?' <span class="badge">Admin</span>':'')+(self?' (you)':'')+'<small>'+esc(x.name||"No name given")+(x.wa?' · '+esc(x.wa):'')+'</small></div>'+
       (can?'<div class="chips"><button class="tag" data-u="'+esc(x.username)+'" data-do="reset">Reset password</button><button class="sm" data-u="'+esc(x.username)+'" data-do="del">Remove</button></div>':'')+'</div>';
   }).join("") || '<p style="color:#4A566B;margin-bottom:0">No logins yet. Create one above.</p>';
-  ROWS = b.rows; SEVAROWS = a.sevas; renderSignups(); fillAtGroups();
+  ROWS = b.rows; SEVAROWS = a.sevas; renderSignups(); fillAtGroups(); USERS = u.users; fillRsPerson();
 }
 $("ago").onclick = async ()=>{
   const name=$("an").value.trim(); if(!name) return say("amsg","Enter a seva name.","err");
@@ -1055,36 +1057,48 @@ applyZoom();
 const RS_NAMES = {signups:"Sign-ups", volunteers:"Volunteer logins", attendance:"Attendance records", activity:"Activity log entries", summary:"Clean-up summary rows"};
 const rsSections = () => ({signups:$("rsSign").checked, volunteers:$("rsVol").checked, attendance:$("rsAtt").checked, activity:$("rsAct").checked, summary:$("rsSum").checked});
 function rsReset(){ $("rsRes").innerHTML = ""; say("rsMsg","") }
-["rsSign","rsVol","rsAtt","rsAct","rsSum","rsDate"].forEach(id=>$(id).addEventListener("change",rsReset));
+["rsSign","rsVol","rsAtt","rsAct","rsSum","rsDate","rsPerson"].forEach(id=>$(id).addEventListener("change",rsReset));
+let USERS = [], RSP = [];
+function fillRsPerson(){
+  const cur = $("rsPerson").value, seen = {};
+  RSP = [];
+  USERS.filter(u=>u.role!=="admin").forEach(u=>{ RSP.push({username:u.username,name:u.name||u.username}); seen[(u.name||u.username).toLowerCase()] = 1 });
+  ROWS.forEach(r=>{ if(!r[10] && !seen[r[1].toLowerCase()]){ seen[r[1].toLowerCase()] = 1; RSP.push({username:"",name:r[1]}) } });   // older sign-ups without a login
+  RSP.sort((a,b)=>a.name.localeCompare(b.name));
+  $("rsPerson").innerHTML = '<option value="">Everyone (all test data)</option>'+RSP.map((p,i)=>'<option value="'+i+'">'+esc(p.name)+(p.username?' ('+esc(p.username)+')':' (no login)')+'</option>').join("");
+  if(cur!=="" && RSP[cur]) $("rsPerson").value = cur;
+}
+const rsPerson = () => $("rsPerson").value==="" ? null : RSP[$("rsPerson").value];
+$("rsPerson").addEventListener("change", ()=>{ const one = $("rsPerson").value!==""; $("rsSum").disabled = one; if(one) $("rsSum").checked = false; else $("rsSum").checked = true });
 $("rsCheck").onclick = async ()=>{
-  const sections = rsSections(), before = $("rsDate").value;
+  const sections = rsSections(), before = $("rsDate").value, person = rsPerson();
   if(!Object.values(sections).some(Boolean)) return say("rsMsg","Tick what you want to delete.","err");
   $("rsCheck").disabled = true; say("rsMsg","Checking...");
   try{
-    const r = await api("resetPreview",{sections,before});
+    const r = await api("resetPreview",{sections,before,person});
     if(!Object.values(r.counts).reduce((a,b)=>a+b,0)){ $("rsRes").innerHTML = ""; say("rsMsg","Nothing to delete.","ok") }
     else{
       say("rsMsg","");
-      $("rsRes").innerHTML = '<p style="margin-bottom:4px">This would delete:</p><ul style="margin-top:0">'+Object.keys(r.counts).map(k=>'<li>'+RS_NAMES[k]+': <b>'+r.counts[k]+'</b></li>').join("")+'</ul>'+
+      $("rsRes").innerHTML = '<p style="margin-bottom:4px">'+(person?'This would delete everything about <b>'+esc(person.name||person.username)+'</b>:':'This would delete:')+'</p><ul style="margin-top:0">'+Object.keys(r.counts).map(k=>'<li>'+RS_NAMES[k]+': <b>'+r.counts[k]+'</b></li>').join("")+'</ul>'+
         '<p class="hint" style="color:var(--red);font-weight:600;margin-top:0">This cannot be undone from the app. A backup copy of your Sheet is made first.</p>'+
         '<label class="f">Type DELETE to confirm<input type="text" id="rsType" autocomplete="off" autocapitalize="characters"></label>'+
         '<button id="rsGo" type="button" disabled style="background:#fff;color:var(--red);border:2px solid var(--red)">Delete now</button>';
       $("rsType").oninput = ()=>{ $("rsGo").disabled = $("rsType").value.trim()!=="DELETE" };
-      $("rsGo").onclick = ()=>runReset(sections,before,false);
+      $("rsGo").onclick = ()=>runReset(sections,before,person,false);
     }
   }catch(err){ say("rsMsg",err.message,"err") }
   $("rsCheck").disabled = false;
 };
-async function runReset(sections,before,skipBackup){
+async function runReset(sections,before,person,skipBackup){
   const go = $("rsGo"); if(go) go.disabled = true; say("rsMsg","Working... please wait.");
   try{
-    const r = await api("resetData",{sections,before,confirm:"DELETE",skipBackup:!!skipBackup});
+    const r = await api("resetData",{sections,before,person,confirm:"DELETE",skipBackup:!!skipBackup});
     $("rsRes").innerHTML = "";
     const parts = Object.keys(r.removed).filter(k=>r.removed[k]).map(k=>RS_NAMES[k].toLowerCase()+": "+r.removed[k]);
-    say("rsMsg","Deleted ("+(parts.join(", ")||"nothing")+")"+(r.backedUp?". A backup copy was made first.":"."),"ok");
+    say("rsMsg","Deleted"+(person?" for "+(person.name||person.username):"")+" ("+(parts.join(", ")||"nothing")+")"+(r.backedUp?". A backup copy was made first.":"."),"ok");
     await loadAdmin();
   }catch(err){
-    if(err.needBackup && confirm(err.message+"\n\nDelete anyway, without a backup?")) return runReset(sections,before,true);
+    if(err.needBackup && confirm(err.message+"\n\nDelete anyway, without a backup?")) return runReset(sections,before,person,true);
     say("rsMsg",err.message,"err"); const g = $("rsGo"); if(g) g.disabled = false;
   }
 }
@@ -1129,7 +1143,9 @@ async function runCleanup(mode,before,skipBackup){
   }
 }
 
-/* volunteers for each seva (pick a seva from the menu) */
+/* volunteers for each seva, or the sevas chosen by one volunteer */
+let BV = {seva:null, person:""};        // seva null = not chosen yet (the first seva is shown)
+const pkey = r => String(r[10]||r[1]).toLowerCase();
 function bvGroups(seva, st){
   const out = [], idx = {}, key = s=>String(s).toLowerCase(), same = r=>key(r[3])===key(seva);
   SEVAROWS.filter(s=>key(s.name)===key(seva)).forEach(s=>{ const k=key(s.cls); if(!(k in idx)){ idx[k]=out.length; out.push({seva,cls:s.cls,needed:s.needed||0,filled:s.filled||0,rows:[]}) } });
@@ -1137,20 +1153,42 @@ function bvGroups(seva, st){
   out.forEach(g=>{ g.waiting = ROWS.filter(r=>same(r) && key(r[6]||"General")===key(g.cls) && r[7]==="Waitlist").length });
   return out;
 }
+function bvPersonRows(){
+  const st = $("bvStatus").value, s = (BV.seva||"").toLowerCase();
+  return ROWS.filter(r=>pkey(r)===BV.person && (!s || r[3].toLowerCase()===s) && (st==="All"||r[7]===st));
+}
+function renderBvPerson(p, st){
+  const all = ROWS.filter(r=>pkey(r)===p.key), rows = bvPersonRows(), by = {};
+  all.forEach(r=>{ by[r[7]] = (by[r[7]]||0)+1 });
+  $("bvSum").innerHTML = '<span><b>'+all.length+'</b> seva sign-up'+(all.length===1?'':'s')+'</span>'+STATUSES.map(s=>by[s]?'<span><b>'+by[s]+'</b> '+s.toLowerCase()+'</span>':'').join("");
+  const digits = String(all[0][2]).replace(/\D/g,"");
+  $("bvList").innerHTML = '<div class="grp2"><div class="ghead"><h3>'+esc(p.name)+'</h3>'+(digits.length>=8?'<a class="btnlink" style="margin:0" href="https://wa.me/'+digits+'" target="_blank" rel="noopener">WhatsApp '+esc(all[0][2])+'</a>':'')+'</div>'+
+    (rows.length ? rows.map(r=>'<div class="rrow"><div><b>'+esc(sevaLabel(r[3],r[6]))+'</b><small>'+esc(r[4])+' · '+esc(r[5])+'</small></div><div class="chips">'+statusSel(r)+actBtns(r)+'</div></div>').join("")
+                 : '<p class="none">No sign-ups'+(st==="All"?'':' with this status')+(BV.seva?' for this seva':'')+'</p>')+'</div>';
+}
 function renderByseva(){
   const names = [];
   SEVAROWS.forEach(s=>{ if(!names.includes(s.name)) names.push(s.name) });
   ROWS.forEach(r=>{ if(!names.some(n=>n.toLowerCase()===r[3].toLowerCase())) names.push(r[3]) });
-  const sel = $("bvSeva"), cur = sel.value, count = n=>ROWS.filter(r=>r[3].toLowerCase()===n.toLowerCase()).length;
-  sel.innerHTML = names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+' ('+count(n)+')</option>').join("") || '<option value="">No sevas yet</option>';
-  if(cur && names.includes(cur)) sel.value = cur;
-  const seva = sel.value, st = $("bvStatus").value;
-  if(!seva){ $("bvSum").innerHTML = ""; $("bvList").innerHTML = '<p class="none">No sevas yet.</p>'; return }
+  const people = {};
+  ROWS.forEach(r=>{ const k=pkey(r); if(!people[k]) people[k]={key:k,name:r[1],n:0}; people[k].n++ });
+  const plist = Object.values(people).sort((a,b)=>a.name.localeCompare(b.name));
+  if(BV.seva===null) BV.seva = names[0] || "";
+  if(BV.seva && !names.includes(BV.seva)) BV.seva = "";
+  if(BV.person && !people[BV.person]) BV.person = "";
+  const count = n=>ROWS.filter(r=>r[3].toLowerCase()===n.toLowerCase()).length;
+  $("bvSeva").innerHTML = '<option value="">All sevas</option>'+names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+' ('+count(n)+')</option>').join("");
+  $("bvPerson").innerHTML = '<option value="">All volunteers</option>'+plist.map(p=>'<option value="'+esc(p.key)+'">'+esc(p.name)+' ('+p.n+')</option>').join("");
+  $("bvSeva").value = BV.seva; $("bvPerson").value = BV.person;
+  const st = $("bvStatus").value;
+  if(BV.person) return renderBvPerson(people[BV.person], st);
+  const seva = BV.seva;
+  if(!seva){ $("bvSum").innerHTML = ""; $("bvList").innerHTML = '<p class="none">Choose a seva or a volunteer above.</p>'; return }
   const mine = ROWS.filter(r=>r[3].toLowerCase()===seva.toLowerCase());
-  const people = new Set(mine.map(r=>(r[10]||r[1]).toLowerCase())).size, by = {};
+  const nPeople = new Set(mine.map(pkey)).size, by = {};
   mine.forEach(r=>{ by[r[7]] = (by[r[7]]||0)+1 });
   $("bvSum").innerHTML = mine.length
-    ? '<span><b>'+people+'</b> volunteer'+(people===1?'':'s')+(mine.length!==people?' ('+mine.length+' sign-ups)':'')+'</span>'+STATUSES.map(s=>by[s]?'<span><b>'+by[s]+'</b> '+s.toLowerCase()+'</span>':'').join("")
+    ? '<span><b>'+nPeople+'</b> volunteer'+(nPeople===1?'':'s')+(mine.length!==nPeople?' ('+mine.length+' sign-ups)':'')+'</span>'+STATUSES.map(s=>by[s]?'<span><b>'+by[s]+'</b> '+s.toLowerCase()+'</span>':'').join("")
     : '<span>No sign-ups yet</span>';
   $("bvList").innerHTML = bvGroups(seva,st).map(g=>{
     let cap = g.needed>0 ? g.filled+' of '+g.needed+' filled'+(g.filled>=g.needed?' (full)':'') : '';
@@ -1161,13 +1199,21 @@ function renderByseva(){
   }).join("") || '<p class="none">No volunteers yet.</p>';
 }
 function downloadByseva(){
-  const seva = $("bvSeva").value; if(!seva) return;
+  const day = new Date().toLocaleDateString("en-CA"), slug = s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  if(BV.person){
+    const rows = bvPersonRows().map(r=>[r[1],r[2],r[3],r[6],r[4],r[5],r[7]]);
+    downloadCsv("volunteer-"+slug(rows[0]?rows[0][0]:"list")+"-"+day+".csv",["Volunteer","WhatsApp number","Seva","Class","Days","Time slots","Status"],rows,1);
+    return;
+  }
+  const seva = BV.seva; if(!seva) return;
   const rows = [];
   bvGroups(seva,$("bvStatus").value).forEach(g=>g.rows.forEach(r=>rows.push([seva,g.cls,r[1],r[2],r[4],r[5],r[7]])));
-  downloadCsv("seva-"+seva.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+new Date().toLocaleDateString("en-CA")+".csv",["Seva","Class","Volunteer","WhatsApp number","Days","Time slots","Status"],rows,3);
+  downloadCsv("seva-"+slug(seva)+"-"+day+".csv",["Seva","Class","Volunteer","WhatsApp number","Days","Time slots","Status"],rows,3);
 }
 $("bv").addEventListener("change", e=>{
-  if(e.target.id==="bvSeva" || e.target.id==="bvStatus"){ say("bvMsg",""); renderByseva(); return }
+  if(e.target.id==="bvSeva"){ BV.seva = $("bvSeva").value; say("bvMsg",""); renderByseva(); return }
+  if(e.target.id==="bvPerson"){ BV.person = $("bvPerson").value; if(BV.person) BV.seva = ""; say("bvMsg",""); renderByseva(); return }
+  if(e.target.id==="bvStatus"){ say("bvMsg",""); renderByseva(); return }
   const sel = e.target.closest("select[data-id]"); if(sel) setStatus(sel);
 });
 $("bv").addEventListener("click", e=>{
