@@ -76,6 +76,18 @@ code{background:var(--mist);border-radius:6px;padding:2px 6px;font-size:15px}
 #vHelp details.how:first-of-type{border-top:0}
 .chk{display:flex;gap:10px;align-items:center;margin:6px 0;font-weight:600}
 .chk input{width:20px;height:20px;accent-color:var(--teal);flex:none}
+.selbox{width:22px;height:22px;flex:none;accent-color:var(--teal);margin:0}
+.rrow .selbox+div{flex:1}
+.bulk{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 12px;margin:10px 0;border:1.5px solid var(--line);border-radius:10px;background:var(--mist)}
+.bulk select{width:auto;margin:0;padding:6px 10px}
+.bulk button{width:auto;padding:8px 14px;font-size:15px}
+.bulk .chk{margin:0}
+.quick{border:1.5px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px;background:#F8FBFC}
+.qlabel{font-weight:600;margin:12px 0 6px;color:var(--indigo)}
+.qhours{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.qhours select{width:auto;margin:0;padding:8px 10px}
+button.chip{width:auto;font-weight:400;font-size:16px;color:var(--ink);background:#fff;padding:9px 14px;border:1.5px solid var(--line)}
+.chip.on{border-color:var(--teal);background:#E6F4F3}
 .anav{position:sticky;top:0;z-index:5;display:flex;gap:8px;overflow-x:auto;padding:10px 0;background:var(--mist);margin:0 0 12px}
 .anav button{width:auto;flex:none;padding:8px 14px;font-size:15px;background:#fff;color:var(--indigo);border:1.5px solid var(--line)}
 #vAdmin .panel{scroll-margin-top:64px}
@@ -129,10 +141,25 @@ th{background:var(--mist);color:var(--indigo)}
   <label class="f"><span data-i18n="password">Password</span><input type="password" id="lp" autocomplete="current-password" required></label>
   <button type="submit" id="lgo" data-i18n="login">Log in</button>
   <div class="msg" id="lmsg" role="status"></div>
+  <button type="button" class="plain" id="regLink" style="margin-top:6px" hidden>New here? Create my login</button>
   <details class="how"><summary data-i18n="homeHelp">Add this page to your phone's home screen</summary>
     <p data-i18n-html="android"><b>Android (Chrome):</b> tap the ⋮ menu, then "Add to Home screen" or "Install app".</p>
     <p data-i18n-html="iphone"><b>iPhone (Safari):</b> tap the Share button, then "Add to Home Screen".</p>
   </details>
+</form>
+
+<form id="vReg" class="panel" hidden novalidate>
+  <h2>Create my login</h2>
+  <p class="hint" style="margin-top:0">Use the satsang code your coordinator shared in the group.</p>
+  <label class="f">Your name<input type="text" id="rn" autocomplete="name"></label>
+  <label class="f">WhatsApp number<input type="tel" id="rw" autocomplete="tel" inputmode="tel"></label>
+  <label class="f">Choose a username <small>(letters and numbers, no spaces)</small><input type="text" id="ru" autocapitalize="none" autocomplete="username"></label>
+  <label class="f">Choose a password <small>(at least 6 characters)</small><input type="password" id="rp" autocomplete="new-password"></label>
+  <label class="f">Confirm password<input type="password" id="rp2" autocomplete="new-password"></label>
+  <label class="f">Satsang code<input type="text" id="rc" autocapitalize="none" autocomplete="off"></label>
+  <button type="submit" id="rgo">Create my login</button>
+  <button type="button" class="plain" id="rback" style="margin-top:10px">Back to log in</button>
+  <div class="msg" id="rmsg" role="status"></div>
 </form>
 
 <form id="vVol" class="panel" hidden novalidate>
@@ -140,6 +167,24 @@ th{background:var(--mist);color:var(--indigo)}
   <label class="f"><span data-i18n="name">Name</span><input type="text" id="name" autocomplete="name" required></label>
   <label class="f"><span data-i18n="wa">WhatsApp number</span><input type="tel" id="wa" autocomplete="tel" inputmode="tel" required><small id="privTxt" style="display:block;margin-top:4px"></small></label>
   <h2 data-i18n="choose">Choose your seva</h2>
+  <div class="quick">
+    <h3 style="margin-top:0">Quick choice <small>(optional)</small></h3>
+    <p class="hint" style="margin-top:0">Tap a class to tick all its sevas at once, and say which days and times you are free. This applies to every seva you tick, and you can still change each one below.</p>
+    <div class="qlabel">Classes</div>
+    <div class="chips" id="qClasses"></div>
+    <div class="qlabel">My days</div>
+    <div class="chips" id="qPresets" style="margin-bottom:8px">
+      <button type="button" class="chip" data-days="Monday,Tuesday,Wednesday,Thursday,Friday">Weekdays</button>
+      <button type="button" class="chip" data-days="Saturday,Sunday">Weekends</button>
+      <button type="button" class="chip" data-days="all">Every day</button>
+      <button type="button" class="chip" data-days="">Clear</button>
+    </div>
+    <div class="chips" id="qDays"></div>
+    <div class="qlabel">My times</div>
+    <div class="chips" id="qSlots"></div>
+    <div class="qhours"><span>or exact hours:</span><select id="qFrom" aria-label="From"></select><span>to</span><select id="qTo" aria-label="To"></select><button type="button" class="plain auto" id="qAddTime">Add</button></div>
+    <div class="msg" id="qMsg" role="status"></div>
+  </div>
   <div class="sevas" id="sevas"></div>
   <p class="count" id="count" aria-live="polite">No seva selected yet</p>
   <div id="whenWrap" hidden>
@@ -187,6 +232,8 @@ th{background:var(--mist);color:var(--indigo)}
   <details class="how"><summary data-i18n="h_q10">Can I make the writing bigger?</summary><p data-i18n="h_a10"></p></details>
   <details class="how"><summary data-i18n="h_q11">Can I add a seva on a fixed date to my phone's calendar?</summary><p data-i18n="h_a11"></p></details>
   <details class="how"><summary data-i18n="h_q12">Where can I see my seva hours?</summary><p data-i18n="h_a12"></p></details>
+  <details class="how"><summary data-i18n="h_q14">How do I create my login?</summary><p data-i18n="h_a14"></p></details>
+  <details class="how"><summary data-i18n="h_q13">How do I choose a whole class, or the days and times I am free?</summary><p data-i18n="h_a13"></p></details>
   <p style="margin-top:18px"><b data-i18n="h_more">Still need help?</b> <span id="helpContact"></span></p>
   <button id="hback" class="plain" style="margin-top:6px" data-i18n="back">Back</button>
 </div>
@@ -207,6 +254,7 @@ th{background:var(--mist);color:var(--indigo)}
     <div class="tally" id="bvSum"></div>
     <button class="plain auto" type="button" data-act="bvdl">Download this list (CSV)</button>
     <p class="hint">Pick a seva to see its volunteers, or pick a volunteer to see all the sevas they chose. Tap a WhatsApp number to message them. Use the drop-down next to a name to change a status.</p>
+    <div class="bulk" data-bulk><label class="chk"><input type="checkbox" class="selall"> Select all</label><span class="selcount">0 selected</span><span>Change to</span><select class="bulkStatus" aria-label="New status"><option>Confirmed</option><option>Assigned</option><option>Pending</option><option>Waitlist</option></select><button type="button" class="bulkGo" disabled>Apply</button><button type="button" class="plain bulkPend">Confirm all pending</button></div>
     <div class="msg" id="bvMsg" role="status"></div>
     <div id="bvList"></div>
   </div>
@@ -271,6 +319,7 @@ th{background:var(--mist);color:var(--indigo)}
     <label class="f" style="max-width:240px">Show<select id="sf"><option>All</option><option>Pending</option><option>Confirmed</option><option>Assigned</option><option>Waitlist</option></select></label>
     <button class="plain auto" id="dl" data-act="dl">Download as CSV (opens in Excel)</button>
     <p class="hint">Tap a WhatsApp number to open a chat with a ready message. The message changes with the status.</p>
+    <div class="bulk" data-bulk><label class="chk"><input type="checkbox" class="selall"> Select all</label><span class="selcount">0 selected</span><span>Change to</span><select class="bulkStatus" aria-label="New status"><option>Confirmed</option><option>Assigned</option><option>Pending</option><option>Waitlist</option></select><button type="button" class="bulkGo" disabled>Apply</button><button type="button" class="plain bulkPend">Confirm all pending</button></div>
     <div class="msg" id="smsg" role="status"></div>
     <div id="listWrap" class="scroll"><table id="tbl"></table></div>
     <div id="roster" hidden></div>
@@ -392,14 +441,14 @@ const MSG = {
 /* ============================= */
 
 const $ = id => document.getElementById(id);
-const VIEWS = ["vLogin","vVol","vDone","vMine","vPass","vHelp","vAdmin"];
+const VIEWS = ["vLogin","vReg","vVol","vDone","vMine","vPass","vHelp","vAdmin"];
 let S = JSON.parse(sessionStorage.getItem("skbs") || "null");
 
 function esc(t){const d=document.createElement("div");d.textContent=t;return d.innerHTML.replace(/"/g,"&quot;")}
 function show(id){
   VIEWS.forEach(v=>$(v).hidden = v!==id);
   const vol = !!(S&&S.role==="volunteer"&&id!=="vLogin");
-  $("logout").hidden = id==="vLogin";
+  $("logout").hidden = id==="vLogin" || id==="vReg";
   const canPw = !!(S && id!=="vLogin" && (S.role==="volunteer" || (S.role==="admin" && !S.owner)));
   $("chpw").hidden = !(canPw&&id!=="vPass");
   $("mine").hidden = !(vol&&id!=="vMine");
@@ -416,7 +465,7 @@ const wait = ms => new Promise(z=>setTimeout(z,ms));
 async function api(action, extra){
   if(!API_URL) throw new Error("API_URL is not set in index.html");
   // Read-only requests are retried automatically; saving requests are not, to avoid saving twice.
-  const tries = ["login","sevas","volData","users","signups","adminData"].includes(action) ? 3 : 1;
+  const tries = ["login","info","sevas","volData","users","signups","adminData"].includes(action) ? 3 : 1;
   for(let i=1;;i++){
     let t;
     try{
@@ -496,7 +545,9 @@ const T = {
     h_q10:"Can I make the writing bigger?", h_a10:"Yes. Tap the \"A\" button at the top to make the text larger. Tap again for the largest size, and once more to return to normal.",
     my_cal:"Add to calendar", my_hours:"Seva this year: {h} hours ({s} sessions)",
     h_q11:"Can I add a seva on a fixed date to my phone's calendar?", h_a11:"Yes. In \"My seva\", tap \"Add to calendar\" next to the seva. Your phone will offer to save it in your calendar, with a reminder.",
-    h_q12:"Where can I see my seva hours?", h_a12:"At the top of \"My seva\", once a coordinator has recorded that you attended."
+    h_q12:"Where can I see my seva hours?", h_a12:"At the top of \"My seva\", once a coordinator has recorded that you attended.",
+    h_q14:"How do I create my login?", h_a14:"On the first page, tap \"New here? Create my login\". Enter your name, WhatsApp number, a username and password you will remember, and the satsang code your coordinator shared in the group. If you do not see that button, please ask your coordinator for a login.",
+    h_q13:"How do I choose a whole class, or the days and times I am free?", h_a13:"Under \"Choose your seva\", tap a class to tick all its sevas at once. Then pick the days you are free (or tap Weekdays or Weekends) and your times: choose a time slot, or add exact hours such as 5:00 am to 10:00 am. These apply to every seva you tick, and you can still change each seva afterwards."
   }
 };
 function tr(k, v){
@@ -537,6 +588,32 @@ $("vLogin").addEventListener("submit", async e=>{
 });
 $("logout").onclick = ()=>{sessionStorage.removeItem("skbs");S=null;$("lp").value="";say("lmsg","");show("vLogin");applyLang()};
 
+/* volunteers create their own login */
+api("info").then(r=>{ $("regLink").hidden = !r.selfSignup }).catch(()=>{});     // the link only shows when you have switched self sign-up on
+$("regLink").onclick = ()=>{ say("rmsg",""); show("vReg") };
+$("rback").onclick = ()=>show("vLogin");
+$("vReg").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const name=$("rn").value.trim(), whatsapp=$("rw").value.trim(), username=$("ru").value.trim(), password=$("rp").value, code=$("rc").value.trim();
+  if(!name) return say("rmsg","Please enter your name.","err");
+  if(whatsapp.replace(/\D/g,"").length<10) return say("rmsg","Please enter a valid WhatsApp number.","err");
+  if(!/^[A-Za-z0-9._-]{3,30}$/.test(username)) return say("rmsg","Username: 3 to 30 letters or numbers, no spaces.","err");
+  if(password.length<6) return say("rmsg","The password must be at least 6 characters.","err");
+  if(password!==$("rp2").value) return say("rmsg","The two passwords do not match.","err");
+  if(!code) return say("rmsg","Please enter the satsang code.","err");
+  $("rgo").disabled = true; say("rmsg","Creating your login...");
+  try{
+    S = null;
+    await api("register",{name,whatsapp,username,password,code});
+    S = {user:username, pass:password};
+    const r = await api("login");
+    S.role = r.role; S.name = r.name; S.owner = !!r.owner; sessionStorage.setItem("skbs",JSON.stringify(S));
+    ["rn","rw","ru","rp","rp2","rc"].forEach(i=>$(i).value="");
+    await enter();
+  }catch(err){ S = null; say("rmsg",err.message,"err") }
+  $("rgo").disabled = false;
+});
+
 async function enter(){
   if(S.role==="admin"){ await loadAdmin(); show("vAdmin"); }
   else { await loadVol(); show("vVol"); }
@@ -567,13 +644,14 @@ function renderVol(keepTicks){
     }
     return '<div class="seva grp"><b>'+n+'</b><span>'+esc(g.desc)+'</span><div class="chips">'+
       g.classes.map(c=>{const m=mark(g.name,c.cls), d=m!==undefined, f=!d&&isFull(c), sp=spots(c);
-        return '<label class="chip'+(d?' done':f?' full':'')+'"><input type="checkbox" data-s="'+n+'" data-c="'+esc(c.cls)+'"'+(c.dated?' data-dt="1"':'')+(f?' data-w="1"':'')+(d?' disabled':'')+'>'+esc(c.cls)+(c.dated&&c.time?' <small>'+esc(c.time)+'</small>':'')+(d?(m==="Waitlist"?' ✓ <small>'+tr("wl_small")+'</small>':' ✓'):'')+(sp&&!d?' <small>'+sp+'</small>':'')+'</label>'}).join("")+'</div></div>';
+        return '<label class="chip'+(d?' done':f?' full':'')+'"><input type="checkbox" data-s="'+n+'" data-c="'+esc(c.cls)+'" data-bc="'+esc(baseClass(c.cls))+'"'+(c.dated?' data-dt="1"':'')+(f?' data-w="1"':'')+(d?' disabled':'')+'>'+esc(c.cls)+(c.dated&&c.time?' <small>'+esc(c.time)+'</small>':'')+(d?(m==="Waitlist"?' ✓ <small>'+tr("wl_small")+'</small>':' ✓'):'')+(sp&&!d?' <small>'+sp+'</small>':'')+'</label>'}).join("")+'</div></div>';
   }).join("") : "<p>"+tr("no_sevas")+"</p>";
   if(keep.size) document.querySelectorAll("#sevas input").forEach(i=>{ if(keep.has(keyOf(i.dataset.s,i.dataset.c))) i.checked = true });
   setCount();
+  renderQuick();
 }
 const picks = () => [...document.querySelectorAll("#sevas input:checked")].map(i=>({seva:i.dataset.s,cls:i.dataset.c,waitlist:i.dataset.w==="1",dated:i.dataset.dt==="1"}));
-$("sevas").addEventListener("change",()=>{ setCount(); renderWhen() });
+$("sevas").addEventListener("change",()=>{ setCount(); renderWhen(); updateQuick() });
 
 /* days and time slots, separately for each selected seva */
 let AV = {};   // remembered choices, keyed by seva|class
@@ -586,10 +664,10 @@ function renderWhen(){
   $("whenWrap").hidden = !p.length;
   $("when").innerHTML = p.map(x=>{
     if(x.dated) return '<div class="when" data-k="'+esc(keyOf(x.seva,x.cls))+'"><b>'+esc(x.seva)+' · '+esc(x.cls)+(x.waitlist?' '+tr("wl_paren"):'')+'</b><p class="hint" style="margin-top:6px">'+tr("fixed_date")+'</p></div>';
-    const v = AV[keyOf(x.seva,x.cls)] || {days:[],slots:[]};
+    const kk = keyOf(x.seva,x.cls), v = AV[kk] || (AV[kk] = {days:[...GA.days], slots:[...GA.slots]});
     return '<div class="when" data-k="'+esc(keyOf(x.seva,x.cls))+'"><b>'+esc(x.seva)+(x.cls!=="General"?' · '+esc(x.cls):'')+(x.waitlist?' '+tr("wl_paren"):'')+'</b>'+
       '<h3>'+tr("days")+'</h3><div class="chips" data-g="days">'+chipHtml(DAYS.map(d=>[d]),v.days,dayL)+'</div>'+
-      '<h3>'+tr("slots")+'</h3><div class="chips" data-g="slots">'+chipHtml(SLOTS,v.slots,slotL)+'</div>'+
+      '<h3>'+tr("slots")+'</h3><div class="chips" data-g="slots">'+chipHtml(SLOTS.concat(extraSlots(v.slots)),v.slots,slotL)+'</div>'+
       (p.length>1?'<button type="button" class="plain copy">'+tr("copy_all")+'</button>':'')+'</div>';
   }).join("");
 }
@@ -604,6 +682,62 @@ $("when").addEventListener("click", e=>{
   document.querySelectorAll("#when .when").forEach(el=>{ AV[el.dataset.k]={days:[...src.days],slots:[...src.slots]} });
   renderWhen();
 });
+/* quick choice: a whole class, my days, my times */
+let GA = {days:[], slots:[]};     // the days and times the volunteer says they are free (applied to every seva they tick)
+const baseClass = c => String(c||"").replace(/(^| · )\w{3} \d{1,2} \w{3} \d{4}$/,"");
+const extraSlots = arr => arr.filter(x=>x && !SLOTS.some(s=>s[0]===x)).map(x=>[x]);
+const timeMins = t => { const m = /^(\d{1,2}):(\d{2}) (am|pm)$/.exec(t); if(!m) return -1; let hr = +m[1]%12; if(m[3]==="pm") hr += 12; return hr*60 + +m[2] };
+(function(){
+  const o = ['<option value="">Choose</option>'];
+  for(let m=4*60; m<=22*60+30; m+=30){ const hr = Math.floor(m/60), mi = m%60; o.push('<option>'+(hr%12||12)+":"+String(mi).padStart(2,"0")+" "+(hr<12?"am":"pm")+'</option>') }
+  $("qFrom").innerHTML = o.join(""); $("qTo").innerHTML = o.join("");
+})();
+function renderQuickTimes(){
+  $("qDays").innerHTML = chipHtml(DAYS.map(d=>[d]), GA.days);
+  $("qSlots").innerHTML = chipHtml(SLOTS.concat(extraSlots(GA.slots)), GA.slots);
+}
+function applyGlobal(){
+  picks().filter(x=>!x.dated).forEach(x=>{ AV[keyOf(x.seva,x.cls)] = {days:[...GA.days], slots:[...GA.slots]} });
+  renderWhen();
+}
+const classInputs = bc => [...document.querySelectorAll("#sevas input[data-bc]")].filter(i=>i.dataset.bc===bc);
+function updateQuick(){
+  document.querySelectorAll("#qClasses .qc").forEach(b=>{
+    const el = classInputs(b.dataset.q).filter(i=>!i.disabled && i.dataset.w!=="1");
+    b.classList.toggle("on", el.length>0 && el.every(i=>i.checked));
+  });
+}
+function renderQuick(){
+  const sets = {};
+  groupSevas(VOLDATA.sevas.filter(s=>s.active && !s.past)).forEach(g=>g.classes.forEach(c=>{ const bc = baseClass(c.cls); if(bc && bc!=="General") (sets[bc] = sets[bc] || new Set()).add(g.name) }));
+  const names = Object.keys(sets).sort();
+  $("qClasses").innerHTML = names.length ? names.map(bc=>'<button type="button" class="chip qc" data-q="'+esc(bc)+'">'+esc(bc)+' <small>'+sets[bc].size+(sets[bc].size===1?' seva':' sevas')+'</small></button>').join("") : '<span class="hint" style="margin:0">No classes to choose from yet.</span>';
+  renderQuickTimes(); updateQuick();
+}
+$("qClasses").addEventListener("click", e=>{
+  const b = e.target.closest(".qc"); if(!b) return;
+  const all = classInputs(b.dataset.q), usable = all.filter(i=>!i.disabled && i.dataset.w!=="1"), full = all.filter(i=>!i.disabled && i.dataset.w==="1").length;
+  const turnOn = !usable.every(i=>i.checked);
+  usable.forEach(i=>{ i.checked = turnOn });
+  say("qMsg", turnOn ? "Ticked "+usable.length+" seva"+(usable.length===1?"":"s")+" for "+b.dataset.q+"."+(full?" "+full+" full one"+(full===1?" was":"s were")+" left out. You can tick "+(full===1?"it":"them")+" yourself to join the waiting list.":"") : "Unticked the sevas for "+b.dataset.q+".", "ok");
+  setCount(); renderWhen(); updateQuick();
+});
+$("qPresets").addEventListener("click", e=>{
+  const b = e.target.closest("button[data-days]"); if(!b) return;
+  const v = b.dataset.days; GA.days = v==="all" ? [...DAYS] : (v ? v.split(",") : []);
+  renderQuickTimes(); applyGlobal();
+});
+$("qDays").addEventListener("change", ()=>{ GA.days = [...$("qDays").querySelectorAll("input:checked")].map(i=>i.value); applyGlobal() });
+$("qSlots").addEventListener("change", ()=>{ GA.slots = [...$("qSlots").querySelectorAll("input:checked")].map(i=>i.value); applyGlobal() });
+$("qAddTime").onclick = ()=>{
+  const f = $("qFrom").value, t = $("qTo").value;
+  if(!f || !t) return say("qMsg","Choose both a start time and an end time.","err");
+  if(timeMins(f) >= timeMins(t)) return say("qMsg","The end time must be after the start time.","err");
+  const label = f+" - "+t;
+  if(!GA.slots.includes(label)) GA.slots.push(label);
+  renderQuickTimes(); applyGlobal(); say("qMsg","Added "+label+".","ok");
+};
+
 function renderDone(){
   const {name,r} = DONE, skipped = r.skipped||[], full = r.full||[], wl = r.waitlisted||[], closed = r.closed||[];
   $("thanks").textContent = tr("thanks",{name});
@@ -636,7 +770,7 @@ $("vVol").addEventListener("submit", async e=>{
     }
     DONE = {name,r}; renderDone();
     show("vDone");
-    $("vVol").reset(); say("vmsg",""); AV = {}; renderWhen();
+    $("vVol").reset(); say("vmsg",""); AV = {}; GA = {days:[],slots:[]}; renderQuickTimes(); say("qMsg",""); renderWhen();
     loadVol().catch(()=>{});
   }catch(err){say("vmsg",srv(err.message),"err")}
   $("vgo").disabled=false;
@@ -700,7 +834,7 @@ function openMine(id){
   MINE_ID = id; say("mdmsg","");
   $("mInfo").textContent = sevaLabel(m.seva,m.cls)+(m.status==="Confirmed"||m.status==="Assigned" ? tr("md_note",{s:stLabel(m.status)}) : "");
   $("mDays").innerHTML = chipHtml(DAYS.map(d=>[d]), (m.days||"").split(", "), dayL);
-  $("mSlots").innerHTML = chipHtml(SLOTS, (m.slots||"").split(", "), slotL);
+  $("mSlots").innerHTML = chipHtml(SLOTS.concat(extraSlots((m.slots||"").split(", "))), (m.slots||"").split(", "), slotL);
   $("mdlg").showModal();
 }
 $("mcancel").onclick = ()=>$("mdlg").close();
@@ -747,7 +881,8 @@ function groups(){   // one group per seva + class, in the order of the Sevas ta
   out.forEach(g=>{ g.waiting = ROWS.filter(r=>r[3].toLowerCase()===g.seva.toLowerCase() && (r[6]||"General").toLowerCase()===g.cls.toLowerCase() && r[7]==="Waitlist").length });
   return out;
 }
-function renderSignups(){
+function renderSignups(){ renderSignupsCore(); updateAllBulks() }
+function renderSignupsCore(){
   renderAttention();
   renderByseva();
   const bySeva = {}, byStatus = {};
@@ -758,14 +893,14 @@ function renderSignups(){
   document.querySelectorAll("#sp .tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===VIEW));
   $("listWrap").hidden = VIEW!=="list"; $("roster").hidden = VIEW!=="roster";
   if(VIEW==="list"){
-    $("tbl").innerHTML = '<tr><th>Time</th><th>Name</th><th>WhatsApp number</th><th>Seva</th><th>Class</th><th>Days</th><th>Time slots</th><th>Status</th><th>Actions</th></tr>'+
-      shown().map(r=>'<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+waCell(r)+'</td><td>'+esc(r[3])+'</td><td>'+esc(r[6])+'</td><td>'+esc(r[4])+'</td><td>'+esc(r[5])+'</td><td>'+statusSel(r)+'</td><td>'+actBtns(r)+'</td></tr>').join("");
+    $("tbl").innerHTML = '<tr><th></th><th>Time</th><th>Name</th><th>WhatsApp number</th><th>Seva</th><th>Class</th><th>Days</th><th>Time slots</th><th>Status</th><th>Actions</th></tr>'+
+      shown().map(r=>'<tr><td><input type="checkbox" class="selbox" data-id="'+esc(r[8])+'" aria-label="Select '+esc(r[1])+'"></td><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+waCell(r)+'</td><td>'+esc(r[3])+'</td><td>'+esc(r[6])+'</td><td>'+esc(r[4])+'</td><td>'+esc(r[5])+'</td><td>'+statusSel(r)+'</td><td>'+actBtns(r)+'</td></tr>').join("");
   }else{
     $("roster").innerHTML = groups().map(g=>{
       let cap = g.needed>0 ? g.filled+' of '+g.needed+' filled'+(g.filled>=g.needed?' (full)':'') : '';
       if(g.waiting) cap += (cap?' · ':'')+(g.needed>0&&g.filled<g.needed?'spot open, ':'')+g.waiting+' on waiting list';
       return '<div class="grp2"><div class="ghead"><h3>'+esc(g.seva)+(g.cls!=="General"?' · '+esc(g.cls):'')+(cap?'<span class="cap">'+esc(cap)+'</span>':'')+'</h3>'+(g.rows.length?'<button class="tag" data-act="remind" data-s="'+esc(g.seva)+'" data-c="'+esc(g.cls)+'">Send reminders</button>':'')+'</div>'+
-        (g.rows.length ? g.rows.map(r=>'<div class="rrow"><div><b>'+esc(r[1])+'</b> '+waCell(r)+'<small>'+esc(r[4])+' · '+esc(r[5])+'</small></div><div class="chips">'+statusSel(r)+actBtns(r)+'</div></div>').join("") : '<p class="none">No volunteers yet</p>')+'</div>';
+        (g.rows.length ? g.rows.map(r=>'<div class="rrow"><input type="checkbox" class="selbox" data-id="'+esc(r[8])+'" aria-label="Select '+esc(r[1])+'"><div><b>'+esc(r[1])+'</b> '+waCell(r)+'<small>'+esc(r[4])+' · '+esc(r[5])+'</small></div><div class="chips">'+statusSel(r)+actBtns(r)+'</div></div>').join("") : '<p class="none">No volunteers yet</p>')+'</div>';
     }).join("") || "<p>No sevas yet.</p>";
   }
 }
@@ -819,7 +954,7 @@ function openEdit(id){
   $("edInfo").textContent = sevaLabel(r[3],r[6])+" (to change the seva, remove this sign-up and add a new one)";
   $("en").value = r[1]; $("ew").value = r[2];
   $("edDays").innerHTML = chipHtml(DAYS.map(d=>[d]), r[4].split(", "));
-  $("edSlots").innerHTML = chipHtml(SLOTS, r[5].split(", "));
+  $("edSlots").innerHTML = chipHtml(SLOTS.concat(extraSlots(r[5].split(", "))), r[5].split(", "));
   $("dlg").showModal();
 }
 $("ecancel").onclick = ()=>$("dlg").close();
@@ -1163,7 +1298,7 @@ function renderBvPerson(p, st){
   $("bvSum").innerHTML = '<span><b>'+all.length+'</b> seva sign-up'+(all.length===1?'':'s')+'</span>'+STATUSES.map(s=>by[s]?'<span><b>'+by[s]+'</b> '+s.toLowerCase()+'</span>':'').join("");
   const digits = String(all[0][2]).replace(/\D/g,"");
   $("bvList").innerHTML = '<div class="grp2"><div class="ghead"><h3>'+esc(p.name)+'</h3>'+(digits.length>=8?'<a class="btnlink" style="margin:0" href="https://wa.me/'+digits+'" target="_blank" rel="noopener">WhatsApp '+esc(all[0][2])+'</a>':'')+'</div>'+
-    (rows.length ? rows.map(r=>'<div class="rrow"><div><b>'+esc(sevaLabel(r[3],r[6]))+'</b><small>'+esc(r[4])+' · '+esc(r[5])+'</small></div><div class="chips">'+statusSel(r)+actBtns(r)+'</div></div>').join("")
+    (rows.length ? rows.map(r=>'<div class="rrow"><input type="checkbox" class="selbox" data-id="'+esc(r[8])+'" aria-label="Select '+esc(sevaLabel(r[3],r[6]))+'"><div><b>'+esc(sevaLabel(r[3],r[6]))+'</b><small>'+esc(r[4])+' · '+esc(r[5])+'</small></div><div class="chips">'+statusSel(r)+actBtns(r)+'</div></div>').join("")
                  : '<p class="none">No sign-ups'+(st==="All"?'':' with this status')+(BV.seva?' for this seva':'')+'</p>')+'</div>';
 }
 function renderByseva(){
@@ -1195,7 +1330,7 @@ function renderByseva(){
     if(g.waiting) cap += (cap?' · ':'')+(g.needed>0&&g.filled<g.needed?'spot open, ':'')+g.waiting+' on waiting list';
     return '<div class="grp2"><div class="ghead"><h3>'+esc(g.cls==="General"?"Volunteers":g.cls)+(cap?'<span class="cap">'+esc(cap)+'</span>':'')+'</h3>'+
       (g.rows.length?'<button class="tag" data-act="remind" data-s="'+esc(g.seva)+'" data-c="'+esc(g.cls)+'">Send reminders</button>':'')+'</div>'+
-      (g.rows.length ? g.rows.map(r=>'<div class="rrow"><div><b>'+esc(r[1])+'</b> '+waCell(r)+'<small>'+esc(r[4])+' · '+esc(r[5])+'</small></div><div class="chips">'+statusSel(r)+actBtns(r)+'</div></div>').join("") : '<p class="none">No volunteers'+(st==="All"?' yet':' with this status')+'</p>')+'</div>';
+      (g.rows.length ? g.rows.map(r=>'<div class="rrow"><input type="checkbox" class="selbox" data-id="'+esc(r[8])+'" aria-label="Select '+esc(r[1])+'"><div><b>'+esc(r[1])+'</b> '+waCell(r)+'<small>'+esc(r[4])+' · '+esc(r[5])+'</small></div><div class="chips">'+statusSel(r)+actBtns(r)+'</div></div>').join("") : '<p class="none">No volunteers'+(st==="All"?' yet':' with this status')+'</p>')+'</div>';
   }).join("") || '<p class="none">No volunteers yet.</p>';
 }
 function downloadByseva(){
@@ -1211,9 +1346,9 @@ function downloadByseva(){
   downloadCsv("seva-"+slug(seva)+"-"+day+".csv",["Seva","Class","Volunteer","WhatsApp number","Days","Time slots","Status"],rows,3);
 }
 $("bv").addEventListener("change", e=>{
-  if(e.target.id==="bvSeva"){ BV.seva = $("bvSeva").value; say("bvMsg",""); renderByseva(); return }
-  if(e.target.id==="bvPerson"){ BV.person = $("bvPerson").value; if(BV.person) BV.seva = ""; say("bvMsg",""); renderByseva(); return }
-  if(e.target.id==="bvStatus"){ say("bvMsg",""); renderByseva(); return }
+  if(e.target.id==="bvSeva"){ BV.seva = $("bvSeva").value; say("bvMsg",""); renderByseva(); updateBulk($("bv")); return }
+  if(e.target.id==="bvPerson"){ BV.person = $("bvPerson").value; if(BV.person) BV.seva = ""; say("bvMsg",""); renderByseva(); updateBulk($("bv")); return }
+  if(e.target.id==="bvStatus"){ say("bvMsg",""); renderByseva(); updateBulk($("bv")); return }
   const sel = e.target.closest("select[data-id]"); if(sel) setStatus(sel);
 });
 $("bv").addEventListener("click", e=>{
@@ -1228,6 +1363,47 @@ document.querySelector(".anav").addEventListener("click", e=>{
   const b = e.target.closest("button[data-go]"); if(!b) return;
   $(b.dataset.go).scrollIntoView({behavior:"smooth",block:"start"});
 });
+
+/* tick boxes and change many statuses at once */
+const boxesIn = p => [...p.querySelectorAll(".selbox")];
+const rowOf = id => ROWS.find(x=>x[8]===id);
+function updateBulk(p){
+  const bs = boxesIn(p), on = bs.filter(b=>b.checked).length, bar = p.querySelector("[data-bulk]");
+  bar.querySelector(".selcount").textContent = on+" selected";
+  bar.querySelector(".bulkGo").disabled = !on;
+  const all = bar.querySelector(".selall"); all.checked = bs.length>0 && on===bs.length; all.indeterminate = on>0 && on<bs.length;
+  const pend = bs.filter(b=>{ const r = rowOf(b.dataset.id); return r && r[7]==="Pending" }).length, pb = bar.querySelector(".bulkPend");
+  pb.textContent = "Confirm all pending"+(pend?" ("+pend+")":""); pb.disabled = !pend;
+}
+function updateAllBulks(){ ["bv","sp"].forEach(id=>updateBulk($(id))) }
+async function applyBulk(p, ids, status, question){
+  if(!ids.length) return;
+  if(!confirm(question)) return;
+  const msg = p.id==="bv" ? "bvMsg" : "smsg";
+  say(msg,"Changing...");
+  try{
+    const r = await api("setStatusMany",{ids,status});
+    ids.forEach(id=>{ const row = rowOf(id); if(row) row[7] = status });
+    say(msg, r.updated+" sign-up"+(r.updated===1?"":"s")+" set to "+status+".", "ok");
+    renderSignups();
+  }catch(err){ fail(msg,err) }
+}
+function bulkHandlers(p){
+  p.addEventListener("change", e=>{
+    if(e.target.classList.contains("selbox")) updateBulk(p);
+    else if(e.target.classList.contains("selall")){ boxesIn(p).forEach(b=>{ b.checked = e.target.checked }); updateBulk(p) }
+  });
+  p.addEventListener("click", e=>{
+    if(e.target.closest(".bulkGo")){
+      const ids = boxesIn(p).filter(b=>b.checked).map(b=>b.dataset.id), st = p.querySelector(".bulkStatus").value;
+      applyBulk(p, ids, st, "Change "+ids.length+" sign-up"+(ids.length===1?"":"s")+" to "+st+"?");
+    }else if(e.target.closest(".bulkPend")){
+      const ids = boxesIn(p).filter(b=>{ const r = rowOf(b.dataset.id); return r && r[7]==="Pending" }).map(b=>b.dataset.id);
+      applyBulk(p, ids, "Confirmed", "Confirm all "+ids.length+" pending sign-up"+(ids.length===1?"":"s")+" shown here?");
+    }
+  });
+}
+bulkHandlers($("bv")); bulkHandlers($("sp"));
 
 /* attendance and seva hours */
 let ATG = [], AT_ROWS = [], HR = [], ACT = [];
