@@ -88,6 +88,9 @@ code{background:var(--mist);border-radius:6px;padding:2px 6px;font-size:15px}
 .qhours select{width:auto;margin:0;padding:8px 10px}
 button.chip{width:auto;font-weight:400;font-size:16px;color:var(--ink);background:#fff;padding:9px 14px;border:1.5px solid var(--line)}
 .chip.on{border-color:var(--teal);background:#E6F4F3}
+.newbox{background:#FFF8E1;border:1.5px solid var(--gold);border-radius:12px;padding:14px 16px;margin-bottom:20px}
+.newbox b{color:var(--indigo);font-size:19px}
+.newbox p{margin:4px 0 12px}
 .anav{position:sticky;top:0;z-index:5;display:flex;gap:8px;overflow-x:auto;padding:10px 0;background:var(--mist);margin:0 0 12px}
 .anav button{width:auto;flex:none;padding:8px 14px;font-size:15px;background:#fff;color:var(--indigo);border:1.5px solid var(--line)}
 #vAdmin .panel{scroll-margin-top:64px}
@@ -136,12 +139,18 @@ th{background:var(--mist);color:var(--indigo)}
 <main>
 
 <form id="vLogin" class="panel" novalidate>
+  <div class="newbox" id="newBox" hidden>
+    <b>New volunteer?</b>
+    <p>You need to create a login first. It takes about a minute.</p>
+    <button type="button" id="regLink">Create my login</button>
+  </div>
   <h2 data-i18n="login">Log in</h2>
+  <p class="hint" style="margin-top:0">Already have a login? Enter your username and password.</p>
   <label class="f"><span data-i18n="username">Username</span><input type="text" id="lu" autocomplete="username" autocapitalize="none" required></label>
   <label class="f"><span data-i18n="password">Password</span><input type="password" id="lp" autocomplete="current-password" required></label>
   <button type="submit" id="lgo" data-i18n="login">Log in</button>
   <div class="msg" id="lmsg" role="status"></div>
-  <button type="button" class="plain" id="regLink" style="margin-top:6px" hidden>New here? Create my login</button>
+  <p class="hint" id="noReg" hidden>New volunteer? Please ask your coordinator for your username and password.</p>
   <details class="how"><summary data-i18n="homeHelp">Add this page to your phone's home screen</summary>
     <p data-i18n-html="android"><b>Android (Chrome):</b> tap the ⋮ menu, then "Add to Home screen" or "Install app".</p>
     <p data-i18n-html="iphone"><b>iPhone (Safari):</b> tap the Share button, then "Add to Home Screen".</p>
@@ -546,7 +555,7 @@ const T = {
     my_cal:"Add to calendar", my_hours:"Seva this year: {h} hours ({s} sessions)",
     h_q11:"Can I add a seva on a fixed date to my phone's calendar?", h_a11:"Yes. In \"My seva\", tap \"Add to calendar\" next to the seva. Your phone will offer to save it in your calendar, with a reminder.",
     h_q12:"Where can I see my seva hours?", h_a12:"At the top of \"My seva\", once a coordinator has recorded that you attended.",
-    h_q14:"How do I create my login?", h_a14:"On the first page, tap \"New here? Create my login\". Enter your name, WhatsApp number, a username and password you will remember, and the satsang code your coordinator shared in the group. If you do not see that button, please ask your coordinator for a login.",
+    h_q14:"How do I create my login?", h_a14:"On the first page, tap \"Create my login\" in the yellow box at the top. Enter your name, WhatsApp number, a username and password you will remember, and the satsang code your coordinator shared in the group. If you do not see that button, please ask your coordinator for a login.",
     h_q13:"How do I choose a whole class, or the days and times I am free?", h_a13:"Under \"Choose your seva\", tap a class to tick all its sevas at once. Then pick the days you are free (or tap Weekdays or Weekends) and your times: choose a time slot, or add exact hours such as 5:00 am to 10:00 am. These apply to every seva you tick, and you can still change each seva afterwards."
   }
 };
@@ -589,7 +598,7 @@ $("vLogin").addEventListener("submit", async e=>{
 $("logout").onclick = ()=>{sessionStorage.removeItem("skbs");S=null;$("lp").value="";say("lmsg","");show("vLogin");applyLang()};
 
 /* volunteers create their own login */
-api("info").then(r=>{ $("regLink").hidden = !r.selfSignup }).catch(()=>{});     // the link only shows when you have switched self sign-up on
+api("info").then(r=>{ $("newBox").hidden = !r.selfSignup; $("noReg").hidden = !!r.selfSignup }).catch(()=>{ $("noReg").hidden = false });     // the yellow box only shows when you have switched self sign-up on
 $("regLink").onclick = ()=>{ say("rmsg",""); show("vReg") };
 $("rback").onclick = ()=>show("vLogin");
 $("vReg").addEventListener("submit", async e=>{
